@@ -5,7 +5,7 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
-public class CozinhaMain {
+public class ConsultaCozinhaMain {
 
     public static void main(String[] args) {
 
@@ -19,7 +19,6 @@ public class CozinhaMain {
                 .run(args);
 
         CozinhaService cozinhaService = applicationContext.getBean(CozinhaService.class);
-
         cozinhaService.listarCozinhas().forEach(c -> System.out.println(c.getNome()));
 
     }
