@@ -28,7 +28,7 @@ public class CozinhaService {
     }
 
     public Cozinha salvarCozinha(Cozinha cozinha) {
-        return entityManager.merge(cozinha);
+        return Maybe.just(entityManager.merge(cozinha)).blockingGet();
     }
 
     @Transactional
