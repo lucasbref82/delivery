@@ -1,4 +1,4 @@
-package br.com.delivery.domain.entity;
+package br.com.delivery.domain.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "RESTAURANTES")
+@Table(name = "restaurantes")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
