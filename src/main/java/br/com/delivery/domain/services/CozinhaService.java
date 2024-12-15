@@ -1,5 +1,6 @@
 package br.com.delivery.domain.services;
 
+import br.com.delivery.configs.SchedulersConfig;
 import br.com.delivery.domain.entities.Cozinha;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Observable;
@@ -7,19 +8,23 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CozinhaService {
 
     @PersistenceContext
     private EntityManager entityManager;
 
+    private final SchedulersConfig schedulersConfig;
+
     public List<Cozinha> listarCozinhas() {
         return Maybe.fromCallable(() -> entityManager.createQuery("from Cozinha", Cozinha.class).getResultList())
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(schedulersConfig.defaultScheduler())
                 .filter(cozinhas -> !cozinhas.isEmpty())
                 .switchIfEmpty(Maybe.just(List.of()))
                 .blockingGet();
@@ -37,7 +42,7 @@ public class CozinhaService {
     @Transactional
     public void salvarTodasCozinhas(List<Cozinha> cozinhas) {
         Observable.fromIterable(cozinhas)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(schedulersConfig.defaultScheduler())
                 .blockingSubscribe(cozinha -> entityManager.persist(cozinha));
     }
 
