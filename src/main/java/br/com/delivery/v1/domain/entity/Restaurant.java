@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @Data
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString
 public class Restaurant {
 
     @Id
