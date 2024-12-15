@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   api_delivery:
     image: mysql:latest
@@ -8,15 +6,16 @@ services:
       MYSQL_ROOT_PASSWORD: acesso_root
       MYSQL_DATABASE: delivery
     ports:
-      - "3306:3306"
+      - "127.0.0.1:3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
     networks:
       - api_network
 
 volumes:
   mysql_data:
-    external: true
+    external: false
 
 networks:
   api_network:
