@@ -5,5 +5,5 @@ public class ThreadPools {
     private ThreadPools() {
 
     }
-    public static final String EXECUTOR_TAREFAS_PADRAO_POOL_THREAD  = "executorTarefasPadraoPoolThread";
+    public static final String DEFAULT_THREAD_POOL = "executorTarefasPadraoPoolThread";
 }

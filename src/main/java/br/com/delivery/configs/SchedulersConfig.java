@@ -12,6 +12,6 @@ public class SchedulersConfig {
     private final ThreadPoolConfig threadPoolConfig;
 
     public Scheduler defaultScheduler() {
-        return Schedulers.from(threadPoolConfig.executorTarefasPadraoPoolThread());
+        return Schedulers.from(threadPoolConfig.defaultPoolTaskExecutor());
     }
 }

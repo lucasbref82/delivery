@@ -1,25 +1,25 @@
-package br.com.delivery.domain.services;
+package br.com.delivery.v1.service;
 
 import br.com.delivery.DeliveryApplication;
+import br.com.delivery.v1.domain.entity.Kitchen;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
-public class ConsultaCozinhaMain {
-
+public class UpdateKitchenMain {
     public static void main(String[] args) {
-
-        /**
-         * Cria configura e incia  a aplicação, definindo que não é web
-         * aproveitando os beans escaneados da classe que tem a notação @SpringBootApplication
-         */
-
         ConfigurableApplicationContext applicationContext = new SpringApplicationBuilder(DeliveryApplication.class)
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        CozinhaService cozinhaService = applicationContext.getBean(CozinhaService.class);
-        cozinhaService.listarCozinhas().forEach(c -> System.out.println(c.getNome()));
+        var kitchenService = applicationContext.getBean(KitchenService.class);
+
+        var kitchen = new Kitchen();
+        kitchen.setId(1L);
+        kitchen.setName("Chinesa");
+
+        kitchenService.save(kitchen);
+
 
     }
 }

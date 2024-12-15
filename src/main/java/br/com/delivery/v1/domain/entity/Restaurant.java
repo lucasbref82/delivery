@@ -1,4 +1,4 @@
-package br.com.delivery.domain.entities;
+package br.com.delivery.v1.domain.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,16 +17,16 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Data
 @Builder
-public class Restaurante {
+public class Restaurant {
 
     @Id
     @Column(name = "ID")
     private Long id;
 
-    @Column(name = "NOME", length = 30)
-    private String nome;
+    @Column(name = "NAME", length = 30)
+    private String name;
 
-    @Column(name = "TAXA_FRETE", precision = 10, scale = 2)
-    private BigDecimal taxaFrete;
+    @Column(name = "SHIPPING FEE", precision = 10, scale = 2)
+    private BigDecimal shippingFee;
 
 }
