@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  api_delivery:
+    image: mysql:latest
+    container_name: API_DELIVERY
+    environment:
+      MYSQL_ROOT_PASSWORD: acesso_root
+      MYSQL_DATABASE: delivery
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - api_network
+
+volumes:
+  mysql_data:
+    external: true
+
+networks:
+  api_network:
+    driver: bridge
