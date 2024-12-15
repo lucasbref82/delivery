@@ -25,6 +25,10 @@ public class CozinhaService {
                 .blockingGet();
     }
 
+    public Cozinha buscar(Long id) {
+        return Maybe.fromCallable(() -> entityManager.find(Cozinha.class, id)).blockingGet();
+    }
+
     @Transactional
     public Cozinha salvarCozinha(Cozinha cozinha) {
         return Maybe.just(entityManager.merge(cozinha)).blockingGet();
@@ -35,6 +39,12 @@ public class CozinhaService {
         Observable.fromIterable(cozinhas)
                 .subscribeOn(Schedulers.io())
                 .blockingSubscribe(cozinha -> entityManager.persist(cozinha));
+    }
+
+    @Transactional
+    public void exclusaoCozinha(Cozinha cozinha) {
+        var cozinhaAux = buscar(cozinha.getId());
+        entityManager.remove(cozinhaAux);
     }
 
 }
