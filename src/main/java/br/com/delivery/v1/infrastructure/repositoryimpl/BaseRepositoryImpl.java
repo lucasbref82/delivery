@@ -7,6 +7,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,16 +56,16 @@ public class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID> {
 
     @SuppressWarnings("unchecked")
     private ID getEntityId(T entity) {
-        try {
-            for (var field : entity.getClass().getDeclaredFields()) {
-                if (field.isAnnotationPresent(Id.class)) {
+        return Arrays.stream(entity.getClass().getDeclaredFields())
+                .filter(f -> f.isAnnotationPresent(Id.class))
+                .findFirst()
+                .map(field -> {
                     field.setAccessible(true);
-                    return (ID) field.get(entity);
-                }
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
+                    try {
+                        return (ID) field.get(entity);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException("Failed to access entity ID field", e);
+                    }
+                }).orElse(null);
     }
 }
