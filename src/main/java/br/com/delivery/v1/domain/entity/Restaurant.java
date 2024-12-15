@@ -20,10 +20,10 @@ public class Restaurant {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(name = "name", length = 30)
+    @Column(name = "name", length = 30, nullable = false)
     private String name;
 
-    @Column(name = "shipping_fee", precision = 10, scale = 2)
+    @Column(name = "shipping_fee", precision = 10, scale = 2, nullable = false)
     private BigDecimal shippingFee;
 
     @ManyToOne

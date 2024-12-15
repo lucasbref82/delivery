@@ -19,7 +19,7 @@ public class Kitchen {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(name = "name", length = 30)
+    @Column(name = "name", length = 30, nullable = false)
     private String name;
 
 }
