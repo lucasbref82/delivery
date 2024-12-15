@@ -3,14 +3,12 @@ package br.com.delivery.domain.services;
 import br.com.delivery.domain.entities.Cozinha;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -27,6 +25,7 @@ public class CozinhaService {
                 .blockingGet();
     }
 
+    @Transactional
     public Cozinha salvarCozinha(Cozinha cozinha) {
         return Maybe.just(entityManager.merge(cozinha)).blockingGet();
     }
