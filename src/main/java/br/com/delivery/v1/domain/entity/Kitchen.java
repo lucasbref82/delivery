@@ -10,14 +10,15 @@ import lombok.*;
 @Builder
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Kitchen {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(name = "NOME", length = 30)
+    @Column(name = "name", length = 30)
     private String name;
 
 }

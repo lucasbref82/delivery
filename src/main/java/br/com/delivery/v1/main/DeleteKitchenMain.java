@@ -1,7 +1,8 @@
-package br.com.delivery.v1.service;
+package br.com.delivery.v1.main;
 
 import br.com.delivery.DeliveryApplication;
 import br.com.delivery.v1.domain.entity.Kitchen;
+import br.com.delivery.v1.service.KitchenService;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;

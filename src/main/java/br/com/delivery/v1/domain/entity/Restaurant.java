@@ -20,13 +20,13 @@ import java.math.BigDecimal;
 public class Restaurant {
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "NAME", length = 30)
+    @Column(name = "name", length = 30)
     private String name;
 
-    @Column(name = "SHIPPING FEE", precision = 10, scale = 2)
+    @Column(name = "shipping_fee", precision = 10, scale = 2)
     private BigDecimal shippingFee;
 
 }
