@@ -13,11 +13,7 @@ public class DeleteKitchenMain {
                 .run(args);
 
         var cozinhaService = applicationContext.getBean(KitchenService.class);
-
-        Kitchen cozinha = new Kitchen();
-        cozinha.setId(1L);
-        cozinha.setName("Tailandesa");
-
+        var cozinha = Kitchen.builder().id(1L).build();
         cozinhaService.deleteKitchen(cozinha);
 
     }
