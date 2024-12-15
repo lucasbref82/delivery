@@ -1,4 +1,4 @@
-package br.com.delivery.v1.main;
+package br.com.delivery.v1.main.kitchen;
 
 import br.com.delivery.DeliveryApplication;
 import br.com.delivery.v1.domain.entity.Kitchen;

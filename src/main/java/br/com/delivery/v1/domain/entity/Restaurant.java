@@ -25,4 +25,8 @@ public class Restaurant {
     @Column(name = "shipping_fee", precision = 10, scale = 2)
     private BigDecimal shippingFee;
 
+    @ManyToOne
+    @JoinColumn(name = "kitchen_id", nullable = false)
+    private Kitchen kitchen;
+
 }
