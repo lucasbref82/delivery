@@ -18,7 +18,7 @@ public class FindKitchenMain {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        KitchenService kitchenService = applicationContext.getBean(KitchenService.class);
+        var kitchenService = applicationContext.getBean(KitchenService.class);
         kitchenService.findAll().forEach(c -> System.out.println(c.getName()));
 
     }

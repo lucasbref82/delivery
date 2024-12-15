@@ -11,14 +11,13 @@ import java.util.List;
 
 public class CreateKitchenMain {
     public static void main(String[] args) {
-        ApplicationContext applicationContext = new SpringApplicationBuilder(DeliveryApplication.class)
+        var applicationContext = new SpringApplicationBuilder(DeliveryApplication.class)
                 .web(WebApplicationType.NONE)
                 .run(args);
 
         var kitchenService = applicationContext.getBean(KitchenService.class);
         var brasileira = Kitchen.builder().name("Brasileira").build();
-        Kitchen japonesa = new Kitchen();
-        japonesa.setName("Japonesa");
+        var japonesa = Kitchen.builder().name("Japonesa").build();
         kitchenService.saveAll(List.of(brasileira, japonesa));
 
     }
