@@ -3,6 +3,7 @@ package br.com.delivery.v1.service;
 import br.com.delivery.configs.SchedulersConfig;
 import br.com.delivery.v1.domain.entity.Kitchen;
 import br.com.delivery.v1.infrastructure.repositoryimpl.BaseRepositoryImpl;
+import br.com.delivery.v1.infrastructure.repositoryimpl.KitchenRepositoryImpl;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Observable;
 import jakarta.persistence.EntityManager;
@@ -19,12 +20,13 @@ public class KitchenService {
 
     @PersistenceContext
     private EntityManager entityManager;
-    private final BaseRepositoryImpl<Kitchen, Long> baseRepository;
+
+    private final KitchenRepositoryImpl kitchenRepository;
 
     private final SchedulersConfig schedulersConfig;
 
     public List<Kitchen> findAll() {
-        return Maybe.fromCallable(baseRepository::findAll)
+        return Maybe.fromCallable(kitchenRepository::findAll)
                 .subscribeOn(schedulersConfig.defaultScheduler())
                 .filter(cozinhas -> !cozinhas.isEmpty())
                 .switchIfEmpty(Maybe.just(List.of()))
@@ -32,12 +34,12 @@ public class KitchenService {
     }
 
     public Kitchen findById(Long id) {
-        return Maybe.fromOptional(baseRepository.findById(id)).blockingGet();
+        return Maybe.fromOptional(kitchenRepository.findById(id)).blockingGet();
     }
 
     @Transactional
     public Kitchen save(Kitchen kitchen) {
-        return Maybe.fromOptional(baseRepository.save(kitchen)).blockingGet();
+        return Maybe.fromOptional(kitchenRepository.save(kitchen)).blockingGet();
     }
 
     @Transactional

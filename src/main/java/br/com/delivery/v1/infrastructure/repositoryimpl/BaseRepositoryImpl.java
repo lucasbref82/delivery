@@ -7,28 +7,23 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
-import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Optional;
 
-public class BaseRepositoryImpl<T, ID extends Serializable> implements BaseRepository<T, ID> {
+public class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID> {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    private final Class<T> entityClass;
+    private Class<T> entityClass;
 
-    @SuppressWarnings("unchecked")
-    public BaseRepositoryImpl() {
-        // Obtém o tipo genérico da classe ao invés de passar no construtor
-        this.entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
-                .getActualTypeArguments()[0];
+    public BaseRepositoryImpl(Class<T> entityClass) {
+        this.entityClass = entityClass;
     }
 
     @Override
     public List<T> findAll() {
-        String query = "SELECT e FROM " + entityClass.getName() + " e";
+        String query = "SELECT e FROM " + entityClass.getSimpleName() + " e";
         Query typedQuery = entityManager.createQuery(query, entityClass);
         return typedQuery.getResultList();
     }
