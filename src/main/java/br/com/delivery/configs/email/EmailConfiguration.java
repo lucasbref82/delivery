@@ -27,23 +27,21 @@ public class EmailConfiguration {
     }
 
     @Bean
-    public Store mailStore() throws NoSuchProviderException {
+    public Store mailStore() throws MessagingException {
         Store store = mailSession().getStore("imaps");
-        try {
-            store.connect(emailData.getEmailHost(), emailData.getEmailUsername(), emailData.getEmailPassword());
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        }
+        store.connect(emailData.getEmailHost(), emailData.getEmailUsername(), emailData.getEmailPassword());
         return store;
     }
 
     @Bean
     public Folder mailFolder() throws MessagingException {
-        // Conectar à pasta INBOX do Gmail
-        Folder folder = mailStore().getFolder("INBOX");
+        Store store = mailStore();
+        if (!store.isConnected()) {
+            store.connect(emailData.getEmailHost(), emailData.getEmailUsername(), emailData.getEmailPassword());
+        }
+        Folder folder = store.getFolder("INBOX");
         folder.open(Folder.READ_ONLY);  // Abrir a pasta para leitura
         return folder;
     }
-
 }
 
