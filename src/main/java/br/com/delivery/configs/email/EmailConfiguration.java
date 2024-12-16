@@ -21,8 +21,8 @@ public class EmailConfiguration {
         properties.setProperty("mail.store.protocol", "imaps");
         properties.setProperty("mail.imaps.host", emailData.getEmailHost());
         properties.setProperty("mail.imaps.port", emailData.getEmailPort());
-        properties.setProperty("mail.imaps.ssl.enable", "true");  // Habilitar SSL para Gmail
-        properties.setProperty("mail.imaps.auth", "true");         // Habilitar autenticação
+        properties.setProperty("mail.imaps.ssl.enable", "true");
+        properties.setProperty("mail.imaps.auth", "true");
         Session session = Session.getInstance(properties);
         session.setDebug(true);
         return session;
