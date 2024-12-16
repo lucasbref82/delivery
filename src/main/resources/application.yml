@@ -9,3 +9,8 @@ spring:
     generate-ddl: true
     hibernate.ddl-auto: create
     show-sql: true
+email:
+  emailHost: imap.gmail.com
+  emailPort: 993
+  emailUsername: testenfe81@gmail.com
+  emailPassword: acesso_total#1999

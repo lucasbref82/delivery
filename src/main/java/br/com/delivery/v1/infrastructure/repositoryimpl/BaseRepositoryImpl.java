@@ -16,7 +16,7 @@ public class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private Class<T> entityClass;
+    private final Class<T> entityClass;
 
     public BaseRepositoryImpl(Class<T> entityClass) {
         this.entityClass = entityClass;
