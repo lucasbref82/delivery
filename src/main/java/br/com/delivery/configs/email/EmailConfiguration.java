@@ -1,6 +1,7 @@
 package br.com.delivery.configs.email;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,6 +10,7 @@ import java.util.Properties;
 
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class EmailConfiguration {
 
     private final EmailData emailData;
@@ -29,19 +31,24 @@ public class EmailConfiguration {
     @Bean
     public Store mailStore() throws MessagingException {
         Store store = mailSession().getStore("imaps");
-        store.connect(emailData.getEmailHost(), emailData.getEmailUsername(), emailData.getEmailPassword());
+        try {
+            store.connect(emailData.getEmailHost(), emailData.getEmailUsername(), emailData.getEmailPassword());
+        } catch (MessagingException e) {
+            log.error("Erro ao conectar usuário {}, com a senha {}, motivo {}.", emailData.getEmailUsername(), emailData.getEmailPassword(), e.getMessage());
+        }
         return store;
     }
 
     @Bean
     public Folder mailFolder() throws MessagingException {
         Store store = mailStore();
-        if (!store.isConnected()) {
-            store.connect(emailData.getEmailHost(), emailData.getEmailUsername(), emailData.getEmailPassword());
+        if (store.isConnected()) {
+            Folder folder = store.getFolder("INBOX");
+            folder.open(Folder.READ_ONLY);
+            return folder;
         }
-        Folder folder = store.getFolder("INBOX");
-        folder.open(Folder.READ_ONLY);  // Abrir a pasta para leitura
-        return folder;
+        throw new MessagingException("Não foi possível conectar a caixa de email.");
+
     }
 }
 
