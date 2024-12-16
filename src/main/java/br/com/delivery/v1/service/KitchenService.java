@@ -2,6 +2,7 @@ package br.com.delivery.v1.service;
 
 import br.com.delivery.configs.SchedulersConfig;
 import br.com.delivery.v1.domain.entity.Kitchen;
+import br.com.delivery.v1.domain.exception.NotFoundException;
 import br.com.delivery.v1.infrastructure.repositoryimpl.BaseRepositoryImpl;
 import br.com.delivery.v1.infrastructure.repositoryimpl.KitchenRepositoryImpl;
 import io.reactivex.rxjava3.core.Maybe;
@@ -34,7 +35,7 @@ public class KitchenService {
     }
 
     public Kitchen findById(Long id) {
-        return Maybe.fromOptional(kitchenRepository.findById(id)).blockingGet();
+        return Maybe.fromOptional(kitchenRepository.findById(id)).switchIfEmpty(Maybe.error(new NotFoundException("Kitchen of id {} not found."))).blockingGet();
     }
 
     @Transactional

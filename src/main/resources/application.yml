@@ -14,4 +14,6 @@ email:
   emailPort: 993
   emailUsername: lucasbref82@gmail.com
   emailPassword: sdsi jpwb mfna plxb
+server:
+  port: 80
 
