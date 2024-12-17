@@ -1,8 +1,10 @@
 package br.com.delivery.utils;
 
 import br.com.delivery.v1.domain.entity.DataRequest;
+import br.com.delivery.v1.domain.repository.DataRequestRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.util.Strings;
@@ -19,12 +21,13 @@ import java.util.stream.Collectors;
 public class DataRequestUtils {
 
     private final HttpServletRequest request;
+    private final DataRequestRepository dataRequestRepository;
 
     @SneakyThrows
     public DataRequest buildDataRequest(Object obj, boolean salvar) {
         ObjectMapper mapper = JacksonUtils.createMapper();
 
-        DataRequest apiRequest = DataRequest.builder()
+        DataRequest dataRequest = DataRequest.builder()
                 .dateRequest(LocalDateTime.now())
                 .uri(Strings.isEmpty(request.getQueryString())
                         ? request.getRequestURI()
@@ -40,9 +43,7 @@ public class DataRequestUtils {
                                 HttpHeaders::new
                         ))))
                 .build();
-        if (salvar) {
-            apiRequestRepository.save(apiRequest);
-        }
-        return apiRequest;
+            dataRequestRepository.save(dataRequest);
+        return dataRequest;
     }
 }
