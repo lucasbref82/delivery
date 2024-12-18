@@ -4,7 +4,6 @@ import br.com.delivery.v1.domain.entity.DataRequest;
 import br.com.delivery.v1.domain.repository.DataRequestRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.logging.log4j.util.Strings;

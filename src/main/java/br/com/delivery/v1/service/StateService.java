@@ -7,7 +7,6 @@ import br.com.delivery.v1.domain.exception.NotFoundException;
 import br.com.delivery.v1.infrastructure.repositoryimpl.StateRepository;
 import io.reactivex.rxjava3.core.Maybe;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
