@@ -51,8 +51,8 @@ public class KitchenService {
     }
 
     @Transactional
-    public void deleteKitchen(Kitchen kitchen) {
-        var managedKitchen = findById(kitchen.getId());
+    public void deleteKitchen(Long id) {
+        var managedKitchen = findById(id);
         entityManager.remove(managedKitchen);
     }
 

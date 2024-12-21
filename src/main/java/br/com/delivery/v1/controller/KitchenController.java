@@ -3,10 +3,8 @@ package br.com.delivery.v1.controller;
 import br.com.delivery.utils.ResponseEntityUtils;
 import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.Kitchen;
-import br.com.delivery.v1.domain.exception.NotFoundException;
 import br.com.delivery.v1.service.KitchenService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -65,7 +63,7 @@ public class KitchenController {
                             .build()
                     );
         } catch (Exception e) {
-           return ResponseEntityUtils.notFoundOrInternalServerError(e);
+            return ResponseEntityUtils.notFoundOrInternalServerError(e);
         }
     }
 
@@ -86,5 +84,13 @@ public class KitchenController {
         }
     }
 
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<GenericMessage> delete(@PathVariable Long id) {
+        try {
+            kitchenService.deleteKitchen(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntityUtils.notFoundOrInternalServerError(e);
+        }
+    }
 }
