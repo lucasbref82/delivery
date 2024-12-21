@@ -29,7 +29,7 @@ public class KitchenController {
                             .build()
                     );
         } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
+            return ResponseEntityUtils.conflictNotFoundOrInternalServerError(e);
         }
 
     }
@@ -46,7 +46,7 @@ public class KitchenController {
                             .build()
                     );
         } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
+            return ResponseEntityUtils.conflictNotFoundOrInternalServerError(e);
         }
     }
 
@@ -63,7 +63,7 @@ public class KitchenController {
                             .build()
                     );
         } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
+            return ResponseEntityUtils.conflictNotFoundOrInternalServerError(e);
         }
     }
 
@@ -80,7 +80,7 @@ public class KitchenController {
                             .build()
                     );
         } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
+            return ResponseEntityUtils.conflictNotFoundOrInternalServerError(e);
         }
     }
 
@@ -90,7 +90,7 @@ public class KitchenController {
             kitchenService.deleteKitchen(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
+            return ResponseEntityUtils.conflictNotFoundOrInternalServerError(e, Kitchen.class, id);
         }
     }
 }
