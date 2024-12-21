@@ -2,8 +2,8 @@ package br.com.delivery.v1.controller;
 
 import br.com.delivery.utils.ResponseEntityUtils;
 import br.com.delivery.v1.domain.dto.GenericMessage;
-import br.com.delivery.v1.domain.entity.Kitchen;
-import br.com.delivery.v1.domain.service.KitchenService;
+import br.com.delivery.v1.domain.entity.Restaurant;
+import br.com.delivery.v1.domain.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -11,27 +11,26 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/kitchens")
+@RequestMapping("v1/restaurants")
 @RequiredArgsConstructor
-public class KitchenController {
+public class RestaurantController {
 
-    private final KitchenService kitchenService;
+    private final RestaurantService restaurantService;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<GenericMessage> findAll() {
         try {
             return ResponseEntity
                     .ok(GenericMessage
                             .builder()
                             .sucess(true)
-                            .result(kitchenService
-                                    .findAll())
+                            .result(restaurantService.findAll())
                             .build()
                     );
+
         } catch (Exception e) {
             return ResponseEntityUtils.internalServerError(e);
         }
-
     }
 
     @GetMapping("/{id}")
@@ -41,8 +40,7 @@ public class KitchenController {
                     .ok(GenericMessage
                             .builder()
                             .sucess(true)
-                            .result(kitchenService
-                                    .findById(id))
+                            .result(restaurantService.findById(id))
                             .build()
                     );
         } catch (Exception e) {
@@ -50,16 +48,17 @@ public class KitchenController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<GenericMessage> create(@RequestBody Kitchen kitchen) {
+    @PostMapping()
+    public ResponseEntity<GenericMessage> save(@RequestBody Restaurant restaurant) {
         try {
             return ResponseEntity
                     .status(HttpStatus.CREATED)
                     .body(GenericMessage
                             .builder()
                             .sucess(true)
-                            .message("Successfully created kitchen.")
-                            .result(kitchenService.save(kitchen))
+                            .message("Succesfully save resturant.")
+                            .result(restaurantService
+                                    .save(restaurant))
                             .build()
                     );
         } catch (Exception e) {
@@ -68,16 +67,16 @@ public class KitchenController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
+    public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
         try {
-            Kitchen currentKitchen = kitchenService.findById(id);
-            BeanUtils.copyProperties(currentKitchen, kitchen, "id");
+            Restaurant currentRestaurante = restaurantService.findById(id);
+            BeanUtils.copyProperties(currentRestaurante, restaurant);
             return ResponseEntity
-                    .ok(GenericMessage
-                            .builder()
+                    .ok(GenericMessage.builder()
                             .sucess(true)
-                            .message("Successfully updated kitchen.")
-                            .result(kitchenService.save(kitchen))
+                            .message("Restaurant successfully changed.")
+                            .result(restaurantService
+                                    .save(restaurant))
                             .build()
                     );
         } catch (Exception e) {
@@ -88,10 +87,17 @@ public class KitchenController {
     @DeleteMapping("/{id}")
     public ResponseEntity<GenericMessage> delete(@PathVariable Long id) {
         try {
-            kitchenService.deleteKitchen(id);
-            return ResponseEntity.noContent().build();
+            restaurantService.delete(id);
+            return ResponseEntity
+                    .status(HttpStatus.NO_CONTENT)
+                    .body(GenericMessage
+                            .builder()
+                            .sucess(true)
+                            .message("Restaurant successfully deleted.")
+                            .build()
+                    );
         } catch (Exception e) {
-            return ResponseEntityUtils.conflictNotFoundOrInternalServerError(e, Kitchen.class, id);
+            return ResponseEntityUtils.conflictNotFoundOrInternalServerError(e, Restaurant.class, id);
         }
     }
 }

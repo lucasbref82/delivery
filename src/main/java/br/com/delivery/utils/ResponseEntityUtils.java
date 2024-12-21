@@ -29,10 +29,10 @@ public class ResponseEntityUtils {
                     );
         }
 
-        return conflictNotFoundOrInternalServerError(e);
+        return notFoundOrInternalServerError(e);
     }
 
-    public static ResponseEntity<GenericMessage> conflictNotFoundOrInternalServerError(Throwable e) {
+    public static ResponseEntity<GenericMessage> notFoundOrInternalServerError(Throwable e) {
         if (e.getCause() instanceof NotFoundException) {
             log.error(Utils.format("Not found {}", e.getMessage()), e);
             return ResponseEntity
@@ -44,6 +44,11 @@ public class ResponseEntityUtils {
                             .build()
                     );
         }
+        return internalServerError(e);
+    }
+
+
+    public static ResponseEntity<GenericMessage> internalServerError(Throwable e) {
         log.error(Utils.format("Unexpected error {}", e.getMessage()), e);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
