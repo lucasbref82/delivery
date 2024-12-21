@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenericMessage {
-    private boolean sucess;
+    private boolean success;
     private Object message;
     private Object result;
 }

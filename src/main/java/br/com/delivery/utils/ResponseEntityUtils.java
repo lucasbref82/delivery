@@ -39,7 +39,7 @@ public class ResponseEntityUtils {
                     .status(HttpStatus.NOT_FOUND)
                     .body(GenericMessage
                             .builder()
-                            .sucess(false)
+                            .success(false)
                             .message(e.getMessage())
                             .build()
                     );
@@ -54,7 +54,7 @@ public class ResponseEntityUtils {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(GenericMessage
                         .builder()
-                        .sucess(false)
+                        .success(false)
                         .message(e.getMessage())
                         .build()
                 );

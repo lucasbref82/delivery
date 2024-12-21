@@ -23,7 +23,7 @@ public class KitchenController {
             return ResponseEntity
                     .ok(GenericMessage
                             .builder()
-                            .sucess(true)
+                            .success(true)
                             .result(kitchenService
                                     .findAll())
                             .build()
@@ -40,7 +40,7 @@ public class KitchenController {
             return ResponseEntity
                     .ok(GenericMessage
                             .builder()
-                            .sucess(true)
+                            .success(true)
                             .result(kitchenService
                                     .findById(id))
                             .build()
@@ -57,7 +57,7 @@ public class KitchenController {
                     .status(HttpStatus.CREATED)
                     .body(GenericMessage
                             .builder()
-                            .sucess(true)
+                            .success(true)
                             .message("Successfully created kitchen.")
                             .result(kitchenService.save(kitchen))
                             .build()
@@ -71,11 +71,11 @@ public class KitchenController {
     public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
         try {
             Kitchen currentKitchen = kitchenService.findById(id);
-            BeanUtils.copyProperties(currentKitchen, kitchen, "id");
+            BeanUtils.copyProperties(kitchen, currentKitchen, "id");
             return ResponseEntity
                     .ok(GenericMessage
                             .builder()
-                            .sucess(true)
+                            .success(true)
                             .message("Successfully updated kitchen.")
                             .result(kitchenService.save(kitchen))
                             .build()

@@ -23,7 +23,7 @@ public class RestaurantController {
             return ResponseEntity
                     .ok(GenericMessage
                             .builder()
-                            .sucess(true)
+                            .success(true)
                             .result(restaurantService.findAll())
                             .build()
                     );
@@ -39,7 +39,7 @@ public class RestaurantController {
             return ResponseEntity
                     .ok(GenericMessage
                             .builder()
-                            .sucess(true)
+                            .success(true)
                             .result(restaurantService.findById(id))
                             .build()
                     );
@@ -55,7 +55,7 @@ public class RestaurantController {
                     .status(HttpStatus.CREATED)
                     .body(GenericMessage
                             .builder()
-                            .sucess(true)
+                            .success(true)
                             .message("Succesfully save resturant.")
                             .result(restaurantService
                                     .save(restaurant))
@@ -70,13 +70,13 @@ public class RestaurantController {
     public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
         try {
             Restaurant currentRestaurante = restaurantService.findById(id);
-            BeanUtils.copyProperties(currentRestaurante, restaurant);
+            BeanUtils.copyProperties(restaurant, currentRestaurante, "id");
             return ResponseEntity
                     .ok(GenericMessage.builder()
-                            .sucess(true)
+                            .success(true)
                             .message("Restaurant successfully changed.")
                             .result(restaurantService
-                                    .save(restaurant))
+                                    .save(currentRestaurante))
                             .build()
                     );
         } catch (Exception e) {
@@ -92,7 +92,7 @@ public class RestaurantController {
                     .status(HttpStatus.NO_CONTENT)
                     .body(GenericMessage
                             .builder()
-                            .sucess(true)
+                            .success(true)
                             .message("Restaurant successfully deleted.")
                             .build()
                     );
