@@ -25,7 +25,6 @@ public class DataRequestUtils {
     @SneakyThrows
     public DataRequest buildDataRequest(Object obj, boolean salvar) {
         ObjectMapper mapper = JacksonUtils.createMapper();
-
         DataRequest dataRequest = DataRequest.builder()
                 .dateRequest(LocalDateTime.now())
                 .uri(Strings.isEmpty(request.getQueryString())
