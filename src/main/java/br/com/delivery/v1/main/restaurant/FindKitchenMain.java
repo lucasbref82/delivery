@@ -1,7 +1,7 @@
 package br.com.delivery.v1.main.restaurant;
 
 import br.com.delivery.DeliveryApplication;
-import br.com.delivery.v1.service.RestaurantService;
+import br.com.delivery.v1.domain.service.RestaurantService;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 

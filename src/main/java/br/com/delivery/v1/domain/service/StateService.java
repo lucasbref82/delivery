@@ -1,4 +1,4 @@
-package br.com.delivery.v1.service;
+package br.com.delivery.v1.domain.service;
 
 import br.com.delivery.configs.SchedulersConfig;
 import br.com.delivery.utils.Utils;

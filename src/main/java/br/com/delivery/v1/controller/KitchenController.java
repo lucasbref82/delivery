@@ -3,7 +3,7 @@ package br.com.delivery.v1.controller;
 import br.com.delivery.utils.ResponseEntityUtils;
 import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.Kitchen;
-import br.com.delivery.v1.service.KitchenService;
+import br.com.delivery.v1.domain.service.KitchenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
