@@ -34,8 +34,8 @@ public class KitchenService {
                 .blockingGet();
     }
 
-    public Kitchen findById(Long id) {
-        return Maybe.fromOptional(kitchenRepository.findById(id)).switchIfEmpty(Maybe.error(new NotFoundException("Kitchen of id {} not found."))).blockingGet();
+    public Maybe<Kitchen> findById(Long id) {
+        return Maybe.fromOptional(kitchenRepository.findById(id)).switchIfEmpty(Maybe.error(new NotFoundException("Kitchen of id {} not found.")));
     }
 
     @Transactional
@@ -52,7 +52,8 @@ public class KitchenService {
 
     @Transactional
     public void deleteKitchen(Long id) {
-        var managedKitchen = findById(id);
+        var managedKitchen = findById(id)
+                .
         entityManager.remove(managedKitchen);
     }
 

@@ -2,11 +2,14 @@ package br.com.delivery.v1.domain.service;
 
 import br.com.delivery.configs.SchedulersConfig;
 import br.com.delivery.utils.Utils;
+import br.com.delivery.v1.domain.entity.Kitchen;
 import br.com.delivery.v1.domain.entity.Restaurant;
 import br.com.delivery.v1.domain.exception.NotFoundException;
+import br.com.delivery.v1.domain.exception.ServiceException;
 import br.com.delivery.v1.infrastructure.repositoryimpl.RestaurantRepositoryImpl;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,7 +21,13 @@ import java.util.List;
 @Slf4j
 public class RestaurantService {
 
+    // Repository
     private final RestaurantRepositoryImpl restaurantRepository;
+
+    // Service
+    private final KitchenService kitchenService;
+
+    // Configs
     private final SchedulersConfig schedulersConfig;
 
     public List<Restaurant> findAll() {
@@ -49,8 +58,21 @@ public class RestaurantService {
                 .blockingGet();
     }
 
-    public Restaurant save(Restaurant restaurant) {
-        return Observable.fromOptional(restaurantRepository.save(restaurant)).blockingFirst();
+
+    public Single<Restaurant> save(Restaurant restaurant) {
+        if (restaurant.getKitchen() != null) {
+            return kitchenService.findById(restaurant.getKitchen().getId())
+                    .flatMap(kitchen -> {
+                        restaurant.setKitchen(kitchen);
+                        return Maybe.fromCallable(() -> restaurantRepository.save(restaurant).orElse(null));
+                    })
+                    .toSingle()
+                    .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving restaurant.", e)));
+        } else {
+            return Maybe.fromCallable(() -> restaurantRepository.save(restaurant).orElse(null))
+                    .toSingle()
+                    .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving restaurant.", e)));
+        }
     }
 
     public void delete(Long id) {
