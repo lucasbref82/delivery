@@ -3,7 +3,6 @@ package br.com.delivery.v1.domain.service;
 import br.com.delivery.configs.SchedulersConfig;
 import br.com.delivery.v1.domain.entity.Kitchen;
 import br.com.delivery.v1.domain.exception.NotFoundException;
-import br.com.delivery.v1.infrastructure.repositoryimpl.BaseRepositoryImpl;
 import br.com.delivery.v1.infrastructure.repositoryimpl.KitchenRepositoryImpl;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Observable;
@@ -52,8 +51,7 @@ public class KitchenService {
 
     @Transactional
     public void deleteKitchen(Long id) {
-        var managedKitchen = findById(id)
-                .
+        var managedKitchen = findById(id).blockingGet();
         entityManager.remove(managedKitchen);
     }
 

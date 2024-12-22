@@ -74,7 +74,7 @@ public class KitchenController {
     @PutMapping("/{id}")
     public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
         try {
-            Kitchen currentKitchen = kitchenService.findById(id);
+            Kitchen currentKitchen = kitchenService.findById(id).blockingGet();
             BeanUtils.copyProperties(kitchen, currentKitchen, "id");
             return ResponseEntity
                     .ok(GenericMessage

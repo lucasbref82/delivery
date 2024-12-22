@@ -15,7 +15,7 @@ public class DeleteKitchenMain {
 
         var cozinhaService = applicationContext.getBean(KitchenService.class);
         var cozinha = Kitchen.builder().id(1L).build();
-        cozinhaService.deleteKitchen(cozinha);
+        cozinhaService.deleteKitchen(cozinha.getId());
 
     }
 }
