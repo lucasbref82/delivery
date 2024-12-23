@@ -69,7 +69,7 @@ public class RestaurantController {
     @PutMapping("/{id}")
     public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
         try {
-            Restaurant currentRestaurante = restaurantService.findById(id);
+            Restaurant currentRestaurante = restaurantService.findById(id).blockingGet();
             BeanUtils.copyProperties(restaurant, currentRestaurante, "id");
             return ResponseEntity
                     .ok(GenericMessage.builder()

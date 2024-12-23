@@ -4,7 +4,7 @@ import br.com.delivery.configs.SchedulersConfig;
 import br.com.delivery.utils.Utils;
 import br.com.delivery.v1.domain.entity.State;
 import br.com.delivery.v1.domain.exception.NotFoundException;
-import br.com.delivery.v1.infrastructure.repositoryimpl.StateRepository;
+import br.com.delivery.v1.domain.repository.StateRepository;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +12,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,14 +35,14 @@ public class StateService {
     }
 
     public  Maybe<State> save(State state) {
-        return Maybe.fromOptional(stateRepository.save(state));
+        return Maybe.fromOptional(Optional.of(stateRepository.save(state)));
     }
 
     public Single<State> update(Long id, State state) {
         return findById(id)
                 .flatMap(s -> {
                     BeanUtils.copyProperties(state, s);
-                    return stateRepository.update(s)
+                    return Optional.of(stateRepository.save(s))
                             .map(Maybe::just)
                             .orElse(Maybe.error(new Exception("Failed to update state")));
                 })
@@ -50,6 +51,6 @@ public class StateService {
 
     public void delete(Long id) {
         findById(id)
-                .blockingSubscribe(stateRepository::save);
+                .blockingSubscribe(stateRepository::delete);
     }
 }

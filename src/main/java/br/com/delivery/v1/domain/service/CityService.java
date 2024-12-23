@@ -5,29 +5,30 @@ import br.com.delivery.utils.Utils;
 import br.com.delivery.v1.domain.entity.City;
 import br.com.delivery.v1.domain.exception.NotFoundException;
 import br.com.delivery.v1.domain.exception.ServiceException;
-import br.com.delivery.v1.infrastructure.repositoryimpl.CityRepositoryImpl;
+import br.com.delivery.v1.domain.repository.CityRepository;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CityService {
 
-    private final CityRepositoryImpl cityRepository;
+    private final CityRepository cityRepository;
 
     private final SchedulersConfig schedulersConfig;
 
     private final StateService stateService;
 
-    public Maybe<List<City>> findAll() {
-        return Maybe.fromCallable(cityRepository::findAll)
+    public Single<List<City>> findAll() {
+        return Single.fromCallable(cityRepository::findAll)
                 .subscribeOn(schedulersConfig.defaultScheduler())
                 .filter(cities -> !cities.isEmpty())
-                .switchIfEmpty(Maybe.just(List.of()));
+                .switchIfEmpty(Single.just(List.of()));
     }
 
     public Single<City> findById(Long id) {
@@ -41,18 +42,18 @@ public class CityService {
             return stateService.findById(city.getState().getId())
                     .flatMap(state -> {
                         city.setState(state);
-                        return Maybe.fromOptional(cityRepository.save(city));
+                        return Maybe.just(cityRepository.save(city));
                     })
                     .toSingle()
                     .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving city", e)));
         }
-        return Maybe.fromOptional(cityRepository.save(city))
+        return Maybe.fromOptional(Optional.of(cityRepository.save(city)))
                 .toSingle()
                 .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving city", e)));
     }
 
     public void delete(Long id) {
         findById(id)
-                .blockingSubscribe(c -> cityRepository.delete(id));
+                .blockingSubscribe(cityRepository::delete);
     }
 }

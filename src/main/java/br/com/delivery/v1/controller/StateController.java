@@ -83,6 +83,7 @@ public class StateController {
     @DeleteMapping("/{id}")
     public ResponseEntity<GenericMessage> delete(@PathVariable Long id) {
         try {
+            stateService.delete(id);
             return ResponseEntity
                     .status(HttpStatus.NO_CONTENT
                     ).body(GenericMessage

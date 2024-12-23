@@ -6,6 +6,7 @@ import br.com.delivery.v1.domain.entity.Kitchen;
 import br.com.delivery.v1.domain.entity.Restaurant;
 import br.com.delivery.v1.domain.exception.NotFoundException;
 import br.com.delivery.v1.domain.exception.ServiceException;
+import br.com.delivery.v1.domain.repository.RestaurantRepository;
 import br.com.delivery.v1.infrastructure.repositoryimpl.RestaurantRepositoryImpl;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Observable;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +24,7 @@ import java.util.List;
 public class RestaurantService {
 
     // Repository
-    private final RestaurantRepositoryImpl restaurantRepository;
+    private final RestaurantRepository restaurantRepository;
 
     // Service
     private final KitchenService kitchenService;
@@ -38,43 +40,30 @@ public class RestaurantService {
                 .blockingGet();
     }
 
-    public Restaurant findById(Long id) {
+    public Maybe<Restaurant> findById(Long id) {
         return Maybe
                 .fromOptional(restaurantRepository.findById(id))
-                .switchIfEmpty(Maybe.error(new NotFoundException(Utils.format("Restaurant with id {} not found"))))
-                .blockingGet();
+                .switchIfEmpty(Maybe.error(new NotFoundException(Utils.format("Restaurant with id {} not found"))));
     }
-
-    public Single<List<Restaurant>> saveAll(List<Restaurant> restaurants) {
-        return Observable
-                .fromIterable(restaurants)
-                .subscribeOn(schedulersConfig.defaultScheduler())
-                .map(r -> restaurantRepository.save(r).orElse(null))
-                .onErrorResumeNext(e -> {
-                    log.error("Erro ao salvar restaurante, motivo: {}", e.getMessage(), e);
-                    return Observable.error(e);
-                })
-                .toList();
-    }
-
 
     public Single<Restaurant> save(Restaurant restaurant) {
         if (restaurant.getKitchen() != null) {
             return kitchenService.findById(restaurant.getKitchen().getId())
                     .flatMap(kitchen -> {
                         restaurant.setKitchen(kitchen);
-                        return Maybe.fromOptional(restaurantRepository.save(restaurant));
+                        return Maybe.just(restaurantRepository.save(restaurant));
                     })
                     .toSingle()
                     .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving restaurant.", e)));
         } else {
-            return Maybe.fromOptional(restaurantRepository.save(restaurant))
+            return Maybe.just(restaurantRepository.save(restaurant))
                     .toSingle()
                     .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving restaurant.", e)));
         }
     }
 
     public void delete(Long id) {
-        restaurantRepository.delete(id);
+        findById(id)
+                .blockingSubscribe(restaurantRepository::delete);
     }
 }
