@@ -33,13 +33,12 @@ public class StateService {
                 .switchIfEmpty(Maybe.error(new NotFoundException(Utils.format("State of id {} not found.", id))));
     }
 
-    public State save(State state) {
-        return Maybe.fromOptional(stateRepository.save(state)).blockingGet();
+    public  Maybe<State> save(State state) {
+        return Maybe.fromOptional(stateRepository.save(state));
     }
 
     public Single<State> update(Long id, State state) {
         return findById(id)
-                .switchIfEmpty(Maybe.error(new NotFoundException(Utils.format("State of id {} not found", id))))
                 .flatMap(s -> {
                     BeanUtils.copyProperties(state, s);
                     return stateRepository.update(s)
@@ -47,5 +46,10 @@ public class StateService {
                             .orElse(Maybe.error(new Exception("Failed to update state")));
                 })
                 .toSingle();
+    }
+
+    public void delete(Long id) {
+        findById(id)
+                .blockingSubscribe(stateRepository::save);
     }
 }
