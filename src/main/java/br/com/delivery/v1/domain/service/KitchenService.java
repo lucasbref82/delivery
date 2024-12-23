@@ -34,12 +34,14 @@ public class KitchenService {
     }
 
     public Maybe<Kitchen> findById(Long id) {
-        return Maybe.fromOptional(kitchenRepository.findById(id)).switchIfEmpty(Maybe.error(new NotFoundException("Kitchen of id {} not found.")));
+        return Maybe.fromOptional(kitchenRepository.findById(id))
+                .switchIfEmpty(Maybe.error(new NotFoundException("Kitchen of id {} not found.")));
     }
 
     @Transactional
     public Kitchen save(Kitchen kitchen) {
-        return Maybe.fromOptional(kitchenRepository.save(kitchen)).blockingGet();
+        return Maybe.fromOptional(kitchenRepository.save(kitchen))
+                .blockingGet();
     }
 
     @Transactional

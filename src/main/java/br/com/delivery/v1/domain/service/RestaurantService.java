@@ -45,7 +45,7 @@ public class RestaurantService {
                 .blockingGet();
     }
 
-    public List<Restaurant> saveAll(List<Restaurant> restaurants) {
+    public Single<List<Restaurant>> saveAll(List<Restaurant> restaurants) {
         return Observable
                 .fromIterable(restaurants)
                 .subscribeOn(schedulersConfig.defaultScheduler())
@@ -54,8 +54,7 @@ public class RestaurantService {
                     log.error("Erro ao salvar restaurante, motivo: {}", e.getMessage(), e);
                     return Observable.error(e);
                 })
-                .toList()
-                .blockingGet();
+                .toList();
     }
 
 
@@ -64,12 +63,12 @@ public class RestaurantService {
             return kitchenService.findById(restaurant.getKitchen().getId())
                     .flatMap(kitchen -> {
                         restaurant.setKitchen(kitchen);
-                        return Maybe.fromCallable(() -> restaurantRepository.save(restaurant).orElse(null));
+                        return Maybe.fromOptional(restaurantRepository.save(restaurant));
                     })
                     .toSingle()
                     .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving restaurant.", e)));
         } else {
-            return Maybe.fromCallable(() -> restaurantRepository.save(restaurant).orElse(null))
+            return Maybe.fromOptional(restaurantRepository.save(restaurant))
                     .toSingle()
                     .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving restaurant.", e)));
         }
