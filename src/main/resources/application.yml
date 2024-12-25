@@ -9,6 +9,9 @@ spring:
     generate-ddl: true
     hibernate.ddl-auto: create
     show-sql: true
+    hibernate:
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 email:
   emailHost: imap.gmail.com
   emailPort: 993
