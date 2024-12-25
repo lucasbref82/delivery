@@ -32,12 +32,11 @@ public class RestaurantService {
     // Configs
     private final SchedulersConfig schedulersConfig;
 
-    public List<Restaurant> findAll() {
+    public Maybe<List<Restaurant>> findAll() {
         return Maybe.fromCallable(restaurantRepository::findAll)
                 .subscribeOn(schedulersConfig.defaultScheduler())
                 .filter(r -> !r.isEmpty())
-                .switchIfEmpty(Maybe.just(List.of()))
-                .blockingGet();
+                .switchIfEmpty(Maybe.just(List.of()));
     }
 
     public Maybe<Restaurant> findById(Long id) {

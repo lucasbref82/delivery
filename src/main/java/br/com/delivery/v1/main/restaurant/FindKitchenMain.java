@@ -13,6 +13,6 @@ public class FindKitchenMain {
 
         var restaurantService = applicationContext.getBean(RestaurantService.class);
 
-        restaurantService.findAll().forEach(r -> System.out.println(r.toString()));
+        restaurantService.findAll().blockingGet().forEach(System.out::println);
     }
 }

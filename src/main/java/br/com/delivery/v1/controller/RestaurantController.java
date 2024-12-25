@@ -4,6 +4,7 @@ import br.com.delivery.utils.ResponseEntityUtils;
 import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.Restaurant;
 import br.com.delivery.v1.domain.service.RestaurantService;
+import io.reactivex.rxjava3.core.Maybe;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -19,33 +20,18 @@ public class RestaurantController {
 
     @GetMapping
     public ResponseEntity<GenericMessage> findAll() {
-        try {
-            return ResponseEntity
-                    .ok(GenericMessage
-                            .builder()
-                            .success(true)
-                            .result(restaurantService.findAll())
-                            .build()
-                    );
-
-        } catch (Exception e) {
-            return ResponseEntityUtils.internalServerError(e);
-        }
+        return restaurantService.findAll()
+                .map(restaurant -> ResponseEntity.ok(GenericMessage.builder().success(true).result(restaurant).build()))
+                .onErrorReturn(ResponseEntityUtils::internalServerError)
+                .blockingGet();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<GenericMessage> findById(@PathVariable Long id) {
-        try {
-            return ResponseEntity
-                    .ok(GenericMessage
-                            .builder()
-                            .success(true)
-                            .result(restaurantService.findById(id))
-                            .build()
-                    );
-        } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
-        }
+        return restaurantService.findById(id)
+                .flatMap(r -> Maybe.just(ResponseEntity.ok(GenericMessage.builder().success(true).result(r).build())))
+                .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
+                .blockingGet();
     }
 
     @PostMapping()

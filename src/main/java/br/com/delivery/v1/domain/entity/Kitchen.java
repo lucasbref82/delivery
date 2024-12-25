@@ -28,6 +28,7 @@ public class Kitchen {
 
     @JsonIgnore
     @OneToMany(mappedBy = "kitchen")
+    @Builder.Default
     private List<Restaurant> restaurants = new ArrayList<>();
 
 }
