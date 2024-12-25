@@ -17,7 +17,7 @@ public class ResponseEntityUtils {
     }
 
     public static <T> ResponseEntity<GenericMessage> conflictNotFoundOrInternalServerError(Throwable e, Class<T> t, Long id) {
-        if (Objects.nonNull(t) && e.getCause() instanceof DataIntegrityViolationException) {
+        if (Objects.nonNull(t) && ((e instanceof DataIntegrityViolationException) ||  (e.getCause() instanceof DataIntegrityViolationException))) {
             log.error(Utils.format("Error when deleting resource {} of id {}, cause {}", t.getSimpleName(), id, e.getMessage()), e);
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
@@ -33,8 +33,7 @@ public class ResponseEntityUtils {
     }
 
     public static ResponseEntity<GenericMessage> notFoundOrInternalServerError(Throwable e) {
-        Throwable cause = e.getCause();
-        if (e instanceof NotFoundException || (cause != null && cause instanceof NotFoundException)) {
+        if (e instanceof NotFoundException || (e.getCause() instanceof NotFoundException)) {
             log.error(Utils.format("Not found {}", e.getMessage()), e);
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
