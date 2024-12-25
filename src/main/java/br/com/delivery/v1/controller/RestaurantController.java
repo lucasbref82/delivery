@@ -54,20 +54,20 @@ public class RestaurantController {
 
     @PutMapping("/{id}")
     public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
-        try {
-            Restaurant currentRestaurante = restaurantService.findById(id).blockingGet();
-            BeanUtils.copyProperties(restaurant, currentRestaurante, "id", "address", "paymentMethods");
-            return ResponseEntity
-                    .ok(GenericMessage.builder()
-                            .success(true)
-                            .message("Restaurant successfully changed.")
-                            .result(restaurantService
-                                    .save(currentRestaurante))
-                            .build()
+        return restaurantService.findById(id)
+                .flatMap(r -> {
+                    BeanUtils.copyProperties(restaurant, r, "id", "address", "paymentMethods");
+                    return Maybe.just(ResponseEntity
+                            .ok(GenericMessage
+                                    .builder()
+                                    .success(true)
+                                    .result(restaurantService.save(r))
+                                    .build()
+                            )
                     );
-        } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
-        }
+                })
+                .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
+                .blockingGet();
     }
 
     @DeleteMapping("/{id}")
