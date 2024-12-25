@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "restaurants")
+@Table(name = "restaurant")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -34,9 +34,9 @@ public class Restaurant {
     private Kitchen kitchen;
 
     @ManyToMany
-    @JoinTable(name = "restaurante_forma_pagamento",
-            joinColumns = @JoinColumn(name = "restaurante_id"),
-            inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
+    @JoinTable(name = "restaurant_payment_method",
+            joinColumns = @JoinColumn(name = "restaurant_id"),
+            inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
     @JsonIgnore
     private List<PaymentMethod> paymentMethods = new ArrayList<>();
 

@@ -6,14 +6,14 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "data_request")
 @Getter
 @Setter
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
-@Table(name = "data_request", schema = "dbo")
 public class DataRequest {
 
     @Id
