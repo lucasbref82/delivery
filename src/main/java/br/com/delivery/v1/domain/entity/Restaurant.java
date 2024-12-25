@@ -1,5 +1,6 @@
 package br.com.delivery.v1.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,7 +37,7 @@ public class Restaurant {
     @JoinTable(name = "restaurante_forma_pagamento",
             joinColumns = @JoinColumn(name = "restaurante_id"),
             inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
+    @JsonIgnore
     private List<PaymentMethod> paymentMethods = new ArrayList<>();
-
 
 }
