@@ -3,8 +3,11 @@ package br.com.delivery.v1.domain.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +37,18 @@ public class Restaurant {
     private Kitchen kitchen;
 
     @Embedded
+    @JsonIgnore
     private Address address;
+
+    @CreationTimestamp
+    @Column(name = "registration_date", nullable = false, columnDefinition = "datetime")
+    @JsonIgnore
+    private LocalDateTime resgistrationDate;
+
+    @UpdateTimestamp
+    @Column(name = "change_date", nullable = false, columnDefinition = "datetime")
+    @JsonIgnore
+    private LocalDateTime changeDate;
 
     @ManyToMany
     @JoinTable(name = "restaurant_payment_method",
