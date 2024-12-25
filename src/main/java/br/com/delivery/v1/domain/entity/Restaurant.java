@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "restaurants")
@@ -30,6 +32,11 @@ public class Restaurant {
     @JoinColumn(name = "kitchen_id", nullable = false)
     private Kitchen kitchen;
 
+    @ManyToMany
+    @JoinTable(name = "restaurante_forma_pagamento",
+            joinColumns = @JoinColumn(name = "restaurante_id"),
+            inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
+    private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
 
 }
