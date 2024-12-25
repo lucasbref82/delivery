@@ -1,13 +1,16 @@
 package br.com.delivery.v1.domain.service;
 
 import br.com.delivery.configs.SchedulersConfig;
+import br.com.delivery.utils.Utils;
 import br.com.delivery.v1.domain.entity.Kitchen;
 import br.com.delivery.v1.domain.exception.NotFoundException;
 import br.com.delivery.v1.domain.repository.KitchenRepository;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,15 +31,26 @@ public class KitchenService {
                 .blockingGet();
     }
 
-    public Maybe<Kitchen> findById(Long id) {
-        return Maybe.fromOptional(kitchenRepository.findById(id))
-                .switchIfEmpty(Maybe.error(new NotFoundException("Kitchen of id {} not found.")));
+    public Single<Kitchen> findById(Long id) {
+        return Single.fromMaybe(Maybe.fromOptional(kitchenRepository.findById(id))
+                .switchIfEmpty(Maybe.error(new NotFoundException(Utils.format("Kitchen of id {} not found.", id)))));
     }
 
     @Transactional
-    public Kitchen save(Kitchen kitchen) {
+    public Single<Kitchen> save(Kitchen kitchen) {
         return Maybe.fromOptional(Optional.of(kitchenRepository.save(kitchen)))
-                .blockingGet();
+                .toSingle()
+                .onErrorResumeNext(e -> Single.error(new Exception(Utils.format("Erro while saving Kitchen."))));
+    }
+
+    @Transactional
+    public Single<Kitchen> save(Kitchen kitchen, Long id) {
+        return findById(id)
+                .map(k -> {
+                    BeanUtils.copyProperties(kitchen, k);
+                    return kitchenRepository.save(k);
+                })
+                .onErrorResumeNext(e -> Single.error(new Exception(Utils.format("Error while saving kitchen with id {}", id))));
     }
 
     @Transactional

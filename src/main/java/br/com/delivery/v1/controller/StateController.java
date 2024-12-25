@@ -7,9 +7,7 @@ import br.com.delivery.v1.domain.entity.Restaurant;
 import br.com.delivery.v1.domain.entity.State;
 import br.com.delivery.v1.domain.service.StateService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +18,7 @@ public class StateController {
 
     private final StateService stateService;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<GenericMessage> findAll() {
         try {
             return ResponseEntity.ok(GenericMessage.builder().success(true).result(stateService.findAll()).build());
@@ -43,7 +41,7 @@ public class StateController {
         }
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<GenericMessage> save(@RequestBody State state) {
         try {
             return ResponseEntity

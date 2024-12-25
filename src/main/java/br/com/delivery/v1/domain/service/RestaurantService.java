@@ -51,9 +51,8 @@ public class RestaurantService {
             return kitchenService.findById(restaurant.getKitchen().getId())
                     .flatMap(kitchen -> {
                         restaurant.setKitchen(kitchen);
-                        return Maybe.just(restaurantRepository.save(restaurant));
+                        return Single.just(restaurantRepository.save(restaurant));
                     })
-                    .toSingle()
                     .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving restaurant.", e)));
         } else {
             return Maybe.just(restaurantRepository.save(restaurant))

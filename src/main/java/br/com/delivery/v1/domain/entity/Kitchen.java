@@ -1,7 +1,11 @@
 package br.com.delivery.v1.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "kitchens")
@@ -21,5 +25,9 @@ public class Kitchen {
 
     @Column(name = "name", length = 30, nullable = false)
     private String name;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "kitchen")
+    private List<Restaurant> restaurants = new ArrayList<>();
 
 }

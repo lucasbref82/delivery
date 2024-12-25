@@ -20,14 +20,7 @@ public class KitchenController {
     @GetMapping
     public ResponseEntity<GenericMessage> findAll() {
         try {
-            return ResponseEntity
-                    .ok(GenericMessage
-                            .builder()
-                            .success(true)
-                            .result(kitchenService
-                                    .findAll())
-                            .build()
-                    );
+            return ResponseEntity.ok(GenericMessage.builder().success(true).result(kitchenService.findAll()).build());
         } catch (Exception e) {
             return ResponseEntityUtils.internalServerError(e);
         }
@@ -36,53 +29,51 @@ public class KitchenController {
 
     @GetMapping("/{id}")
     public ResponseEntity<GenericMessage> findById(@PathVariable Long id) {
-        try {
-            return ResponseEntity
-                    .ok(GenericMessage
-                            .builder()
-                            .success(true)
-                            .result(kitchenService
-                                    .findById(id))
-                            .build()
-                    );
-        } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
-        }
+        return kitchenService
+                .findById(id)
+                .map(kitchen -> ResponseEntity
+                        .ok(GenericMessage
+                                .builder()
+                                .success(true)
+                                .result(kitchen)
+                                .build()
+                        )
+
+                )
+                .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
+                .blockingGet();
     }
 
     @PostMapping
     public ResponseEntity<GenericMessage> create(@RequestBody Kitchen kitchen) {
-        try {
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(GenericMessage
-                            .builder()
-                            .success(true)
-                            .message("Successfully created kitchen.")
-                            .result(kitchenService.save(kitchen))
-                            .build()
-                    );
-        } catch (Exception e) {
-            return ResponseEntityUtils.internalServerError(e);
-        }
+        return kitchenService.save(kitchen)
+                .map(k ->
+                        ResponseEntity
+                                .ok()
+                                .body(GenericMessage
+                                        .builder()
+                                        .success(true)
+                                        .result(k)
+                                        .build())
+                )
+                .onErrorReturn(ResponseEntityUtils::internalServerError)
+                .blockingGet();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
-        try {
-            Kitchen currentKitchen = kitchenService.findById(id).blockingGet();
-            BeanUtils.copyProperties(kitchen, currentKitchen, "id");
-            return ResponseEntity
-                    .ok(GenericMessage
-                            .builder()
-                            .success(true)
-                            .message("Successfully updated kitchen.")
-                            .result(kitchenService.save(kitchen))
-                            .build()
-                    );
-        } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
-        }
+        return kitchenService.save(kitchen, id)
+                .map(k ->
+                        ResponseEntity
+                                .ok(GenericMessage
+                                        .builder()
+                                        .success(true)
+                                        .result(k)
+                                        .build()
+                                )
+                )
+                .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
+                .blockingGet();
     }
 
     @DeleteMapping("/{id}")

@@ -33,16 +33,15 @@ public class ResponseEntityUtils {
     }
 
     public static ResponseEntity<GenericMessage> notFoundOrInternalServerError(Throwable e) {
-        if (e.getCause() instanceof NotFoundException) {
+        Throwable cause = e.getCause();
+        if (e instanceof NotFoundException || (cause != null && cause instanceof NotFoundException)) {
             log.error(Utils.format("Not found {}", e.getMessage()), e);
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(GenericMessage
-                            .builder()
+                    .body(GenericMessage.builder()
                             .success(false)
                             .message(e.getMessage())
-                            .build()
-                    );
+                            .build());
         }
         return internalServerError(e);
     }
