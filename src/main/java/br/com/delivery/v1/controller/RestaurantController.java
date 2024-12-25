@@ -56,7 +56,7 @@ public class RestaurantController {
     public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
         try {
             Restaurant currentRestaurante = restaurantService.findById(id).blockingGet();
-            BeanUtils.copyProperties(restaurant, currentRestaurante, "id");
+            BeanUtils.copyProperties(restaurant, currentRestaurante, "id", "address", "paymentMethods");
             return ResponseEntity
                     .ok(GenericMessage.builder()
                             .success(true)
