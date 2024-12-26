@@ -8,6 +8,7 @@ spring:
     hikari:
       maximum-pool-size: 5
       minumum-idle: 3
+      idle-timeout: 10000
   jpa:
     generate-ddl: true
     hibernate.ddl-auto: create
