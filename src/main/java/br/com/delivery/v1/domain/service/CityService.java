@@ -1,6 +1,5 @@
 package br.com.delivery.v1.domain.service;
 
-import br.com.delivery.configs.SchedulersConfig;
 import br.com.delivery.utils.Utils;
 import br.com.delivery.v1.domain.entity.City;
 import br.com.delivery.v1.domain.exception.NotFoundException;
@@ -20,13 +19,10 @@ public class CityService {
 
     private final CityRepository cityRepository;
 
-    private final SchedulersConfig schedulersConfig;
-
     private final StateService stateService;
 
     public Single<List<City>> findAll() {
         return Single.fromCallable(cityRepository::findAll)
-                .subscribeOn(schedulersConfig.defaultScheduler())
                 .filter(cities -> !cities.isEmpty())
                 .switchIfEmpty(Single.just(List.of()));
     }

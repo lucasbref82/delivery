@@ -1,5 +1,6 @@
 package br.com.delivery.v1.controller;
 
+import br.com.delivery.configs.SchedulersConfig;
 import br.com.delivery.utils.ResponseEntityUtils;
 import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.City;
@@ -18,11 +19,14 @@ import org.springframework.web.bind.annotation.*;
 public class CityController {
 
     private final CityService cityService;
+    private final SchedulersConfig schedulersConfig;
 
     @GetMapping
     public ResponseEntity<GenericMessage> findAll() {
         return cityService.findAll()
-                .flatMap(s -> Single.just(ResponseEntity.ok(GenericMessage.builder().success(true).result(s).build())))
+                .subscribeOn(schedulersConfig.defaultScheduler())
+                .map(s -> GenericMessage.builder().success(true).result(s).build())
+                .map(ResponseEntity::ok)
                 .onErrorReturn(ResponseEntityUtils::internalServerError)
                 .blockingGet();
     }
@@ -30,7 +34,9 @@ public class CityController {
     @GetMapping("/{id}")
     public ResponseEntity<GenericMessage> findById(@PathVariable Long id) {
         return cityService.findById(id)
-                .flatMap(s -> Single.just(ResponseEntity.ok(GenericMessage.builder().success(true).result(s).build())))
+                .subscribeOn(schedulersConfig.defaultScheduler())
+                .map(s -> GenericMessage.builder().success(true).result(s).build())
+                .map(ResponseEntity::ok)
                 .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
                 .blockingGet();
     }
@@ -38,7 +44,9 @@ public class CityController {
     @PostMapping
     public ResponseEntity<GenericMessage> create(@RequestBody City city) {
         return cityService.save(city)
-                .flatMap(c -> Single.just(ResponseEntity.ok(GenericMessage.builder().success(true).result(c).build())))
+                .subscribeOn(schedulersConfig.defaultScheduler())
+                .map(c -> GenericMessage.builder().success(true).result(c).build())
+                .map(ResponseEntity::ok)
                 .onErrorReturn(ResponseEntityUtils::internalServerError)
                 .blockingGet();
     }
@@ -46,12 +54,19 @@ public class CityController {
     @PutMapping("/{id}")
     public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody City city) {
         return cityService.findById(id)
-                .flatMap(r -> {
-                    BeanUtils.copyProperties(city, r, "id");
-                    return Single.just(cityService.save(r)
-                            .map(c -> ResponseEntity.ok(GenericMessage.builder().success(true).result(c).build()))
-                            .blockingGet());
+                .subscribeOn(schedulersConfig.defaultScheduler())
+                .map(existingCity -> {
+                    BeanUtils.copyProperties(city, existingCity, "id");
+                    return cityService.save(existingCity)
+                            .map(c -> GenericMessage
+                                        .builder()
+                                        .success(true)
+                                        .result(c)
+                                        .build()
+                            )
+                            .blockingGet();
                 })
+                .map(ResponseEntity::ok)
                 .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
                 .blockingGet();
     }
