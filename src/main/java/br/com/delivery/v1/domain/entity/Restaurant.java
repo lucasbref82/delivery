@@ -1,6 +1,7 @@
 package br.com.delivery.v1.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,25 +33,21 @@ public class Restaurant {
     @Column(name = "shipping_fee", precision = 10, scale = 2, nullable = false)
     private BigDecimal shippingFee;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kitchen_id", nullable = false)
     private Kitchen kitchen;
 
     @Embedded
-    @JsonIgnore
     private Address address;
 
     @CreationTimestamp
     @Column(name = "registration_date", nullable = false, columnDefinition = "datetime")
-    @JsonIgnore
     private LocalDateTime resgistrationDate;
 
     @UpdateTimestamp
     @Column(name = "change_date", nullable = false, columnDefinition = "datetime")
-    @JsonIgnore
     private LocalDateTime changeDate;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "restaurant")
     @Builder.Default
     private List<Product> products = new ArrayList<>();
@@ -59,7 +56,7 @@ public class Restaurant {
     @JoinTable(name = "restaurant_payment_method",
             joinColumns = @JoinColumn(name = "restaurant_id"),
             inverseJoinColumns = @JoinColumn(name = "payment_method_id"))
-    @JsonIgnore
+    @Builder.Default
     private List<PaymentMethod> paymentMethods = new ArrayList<>();
 
 }
