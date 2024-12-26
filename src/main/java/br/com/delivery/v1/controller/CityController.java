@@ -38,7 +38,7 @@ public class CityController {
     @PostMapping
     public ResponseEntity<GenericMessage> create(@RequestBody City city) {
         return cityService.save(city)
-                .map(c -> ResponseEntity.ok(GenericMessage.builder().success(true).result(c).build()))
+                .flatMap(c -> Single.just(ResponseEntity.ok(GenericMessage.builder().success(true).result(c).build())))
                 .onErrorReturn(ResponseEntityUtils::internalServerError)
                 .blockingGet();
     }
@@ -46,11 +46,11 @@ public class CityController {
     @PutMapping("/{id}")
     public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody City city) {
         return cityService.findById(id)
-                .map(r -> {
+                .flatMap(r -> {
                     BeanUtils.copyProperties(city, r, "id");
-                    return cityService.save(r)
+                    return Single.just(cityService.save(r)
                             .map(c -> ResponseEntity.ok(GenericMessage.builder().success(true).result(c).build()))
-                            .blockingGet();
+                            .blockingGet());
                 })
                 .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
                 .blockingGet();
