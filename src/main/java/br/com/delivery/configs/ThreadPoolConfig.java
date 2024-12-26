@@ -16,7 +16,7 @@ public class ThreadPoolConfig {
         executor.setCorePoolSize(10);
         executor.setMaxPoolSize(10);
         executor.setQueueCapacity(1000);
-        executor.setThreadNamePrefix("padrao-");
+        executor.setThreadNamePrefix("default-");
         executor.initialize();
         return executor;
     }
