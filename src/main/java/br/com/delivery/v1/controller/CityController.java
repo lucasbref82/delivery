@@ -4,7 +4,9 @@ import br.com.delivery.utils.ResponseEntityUtils;
 import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.City;
 import br.com.delivery.v1.domain.service.CityService;
+import io.reactivex.rxjava3.core.Single;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,71 +21,39 @@ public class CityController {
 
     @GetMapping
     public ResponseEntity<GenericMessage> findAll() {
-        try {
-            return ResponseEntity
-                    .ok(GenericMessage
-                            .builder()
-                            .success(true)
-                            .result(cityService.findAll().blockingGet())
-                            .build()
-                    );
-        } catch (Exception e) {
-            return ResponseEntityUtils.internalServerError(e);
-        }
+        return cityService.findAll()
+                .flatMap(s -> Single.just(ResponseEntity.ok(GenericMessage.builder().success(true).result(s).build())))
+                .onErrorReturn(ResponseEntityUtils::internalServerError)
+                .blockingGet();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<GenericMessage> findById(@PathVariable Long id) {
-        try {
-            return
-                    ResponseEntity
-                            .ok(GenericMessage
-                                    .builder()
-                                    .success(true)
-                                    .result(cityService.findById(id).blockingGet())
-                                    .build()
-                            );
-        } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
-        }
+        return cityService.findById(id)
+                .flatMap(s -> Single.just(ResponseEntity.ok(GenericMessage.builder().success(true).result(s).build())))
+                .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
+                .blockingGet();
     }
 
     @PostMapping
     public ResponseEntity<GenericMessage> create(@RequestBody City city) {
-        try {
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(GenericMessage
-                            .builder()
-                            .success(true)
-                            .result(
-                                    cityService
-                                            .save(city)
-                                            .blockingGet()
-                            )
-                            .build()
-                    );
-        } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
-        }
-     }
+        return cityService.save(city)
+                .map(c -> ResponseEntity.ok(GenericMessage.builder().success(true).result(c).build()))
+                .onErrorReturn(ResponseEntityUtils::internalServerError)
+                .blockingGet();
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody City city) {
-        try {
-            City currentCity = cityService.findById(id).blockingGet();
-            BeanUtils.copyProperties(city, currentCity, "id");
-            return ResponseEntity
-                    .ok(GenericMessage.builder()
-                            .success(true)
-                            .message("City successfully changed.")
-                            .result(cityService
-                                    .save(currentCity))
-                            .build()
-                    );
-        } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
-        }
+        return cityService.findById(id)
+                .map(r -> {
+                    BeanUtils.copyProperties(city, r, "id");
+                    return cityService.save(r)
+                            .map(c -> ResponseEntity.ok(GenericMessage.builder().success(true).result(c).build()))
+                            .blockingGet();
+                })
+                .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
+                .blockingGet();
     }
 
     @DeleteMapping("/{id}")
