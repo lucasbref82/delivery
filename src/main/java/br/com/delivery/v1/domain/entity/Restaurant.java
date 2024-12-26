@@ -50,6 +50,11 @@ public class Restaurant {
     @JsonIgnore
     private LocalDateTime changeDate;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "restaurant")
+    @Builder.Default
+    private List<Product> products = new ArrayList<>();
+
     @ManyToMany
     @JoinTable(name = "restaurant_payment_method",
             joinColumns = @JoinColumn(name = "restaurant_id"),

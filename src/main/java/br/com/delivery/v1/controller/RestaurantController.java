@@ -56,7 +56,7 @@ public class RestaurantController {
     public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody Restaurant restaurant) {
         return restaurantService.findById(id)
                 .flatMap(r -> {
-                    BeanUtils.copyProperties(restaurant, r, "id", "address", "paymentMethods");
+                    BeanUtils.copyProperties(restaurant, r, "id", "address", "paymentMethods", "resgistrationDate");
                     return Maybe.just(ResponseEntity
                             .ok(GenericMessage
                                     .builder()

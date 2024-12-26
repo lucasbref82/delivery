@@ -36,8 +36,7 @@ public class RestaurantService {
     }
 
     public Maybe<Restaurant> findById(Long id) {
-        return Maybe
-                .fromOptional(restaurantRepository.findById(id))
+        return Maybe.fromOptional(restaurantRepository.findById(id))
                 .switchIfEmpty(Maybe.error(new NotFoundException(Utils.format("Restaurant with id {} not found"))));
     }
 
