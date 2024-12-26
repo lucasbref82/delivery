@@ -24,12 +24,22 @@ INSERT INTO restaurant (name, shipping_fee, kitchen_id, registration_date, chang
 INSERT INTO restaurant (name, shipping_fee, kitchen_id, registration_date, change_date) VALUES ('Sushi Sakura', 100.00, 4, utc_timestamp, utc_timestamp);
 
 
-INSERT INTO permission (name, description) values ("READ_ONLY", "User has read only permission");
-INSERT INTO permission (name, description) values ("READ_WRITE", "User has read and write permissions");
-INSERT INTO permission (name, description) values ("ADMIN", "User has all permissions");
+insert into permission (name, description) values ('CONSULTAR_COZINHAS', 'Permite consultar cozinhas');
+insert into permission (name, description) values ('EDITAR_COZINHAS', 'Permite editar cozinhas');
 
 
 insert into restaurant_payment_method (restaurant_id, payment_method_id) values (1, 1), (1, 2), (1, 3), (2, 3), (3, 2), (3, 3);
+
+insert into product (name, description, price, active, restaurant_id) values ('Porco com molho agridoce', 'Deliciosa carne suína ao molho especial', 78.90, 1, 1);
+insert into product (name, description, price, active, restaurant_id) values ('Camarão tailandês', '16 camarões grandes ao molho picante', 110, 1, 1);
+
+insert into product (name, description, price, active, restaurant_id) values ('Salada picante com carne grelhada', 'Salada de folhas com cortes finos de carne bovina grelhada e nosso molho especial de pimenta vermelha', 87.20, 1, 2);
+
+insert into product (name, description, price, active, restaurant_id) values ('Garlic Naan', 'Pão tradicional indiano com cobertura de alho', 21, 1, 3);
+insert into product (name, description, price, active, restaurant_id) values ('Murg Curry', 'Cubos de frango preparados com molho curry e especiarias', 43, 1, 3);
+
+insert into product (name, description, price, active, restaurant_id) values ('Bife Ancho', 'Corte macio e suculento, com dois dedos de espessura, retirado da parte dianteira do contrafilé', 79, 1, 4);
+insert into product (name, description, price, active, restaurant_id) values ('T-Bone', 'Corte muito saboroso, com um osso em formato de T, sendo de um lado o contrafilé e do outro o filé mignon', 89, 1, 4);
 
 
 
