@@ -1,6 +1,6 @@
 services:
   api_delivery:
-    image: mysql:latest
+    image: mysql:8.0
     container_name: API_DELIVERY
     environment:
       MYSQL_ROOT_PASSWORD: acesso_root

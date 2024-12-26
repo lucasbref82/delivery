@@ -10,8 +10,6 @@ spring:
       minumum-idle: 3
       idle-timeout: 10000
   jpa:
-    generate-ddl: true
-    hibernate.ddl-auto: create
     show-sql: true
     hibernate:
       naming:

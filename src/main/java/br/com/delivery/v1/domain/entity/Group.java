@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "groups")
+@Table(name = "group_table")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Group {
