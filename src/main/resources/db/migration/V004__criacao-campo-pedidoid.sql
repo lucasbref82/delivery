@@ -1,0 +1,9 @@
+ALTER TABLE order_item
+ADD COLUMN product_id BIGINT;
+
+ALTER TABLE order_item
+ADD CONSTRAINT fk_product_id
+FOREIGN KEY (product_id)
+REFERENCES product(id)
+ON DELETE CASCADE
+ON UPDATE CASCADE;

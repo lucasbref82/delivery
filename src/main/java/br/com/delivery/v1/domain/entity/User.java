@@ -38,6 +38,7 @@ public class User {
     @ManyToMany
     @JoinTable(name = "user_groups", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id"))
+    @Builder.Default
     private List<Group> groups = new ArrayList<>();
 
 }
