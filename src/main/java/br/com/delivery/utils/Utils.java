@@ -5,6 +5,7 @@ import org.slf4j.helpers.MessageFormatter;
 import java.security.SecureRandom;
 
 public class Utils {
+
     private Utils() {
 
     }

@@ -5,13 +5,13 @@ delete from kitchen;
 delete from state;
 delete from payment_method;
 delete from group_table;
-delete from group_table_permission;
+delete from group_permissions;
 delete from permission;
 delete from product;
 delete from restaurant;
 delete from restaurant_payment_method;
 delete from user_table;
-delete from user_table_group_table;
+delete from user_groups;
 
 set foreign_key_checks = 1;
 
@@ -40,7 +40,7 @@ insert into city (id, name, state_id) values (3, 'São Paulo', 2);
 insert into city (id, name, state_id) values (4, 'Campinas', 2);
 insert into city (id, name, state_id) values (5, 'Fortaleza', 3);
 
-insert into restaurant (id, name, shipping_fee, kitchen_id, registration_date, change_date, adress_city_id, , address_public_place, address_number, address_neighborhood) values (1, 'Thai Gourmet', 10, 1, utc_timestamp, utc_timestamp, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
+insert into restaurant (id, name, shipping_fee, kitchen_id, registration_date, change_date, address_city_id, address_public_place, address_zip_code, address_number, address_neighborhood) values (1, 'Thai Gourmet', 10, 1, utc_timestamp, utc_timestamp, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
 insert into restaurant (id, name, shipping_fee, kitchen_id, registration_date, change_date) values (2, 'Thai Delivery', 9.50, 1, utc_timestamp, utc_timestamp);
 insert into restaurant (id, name, shipping_fee, kitchen_id, registration_date, change_date) values (3, 'Tuk Tuk Comida Indiana', 15, 2, utc_timestamp, utc_timestamp);
 insert into restaurant (id, name, shipping_fee, kitchen_id, registration_date, change_date) values (4, 'Java Steakhouse', 12, 3, utc_timestamp, utc_timestamp);

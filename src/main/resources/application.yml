@@ -14,6 +14,15 @@ spring:
     hibernate:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  flyway:
+    locations: classpath:db/migration,classpath:db/testdata
+    #properties:
+      #javax:
+        #persistence:
+          #schema-generation:
+            #scripts:
+              #action: create
+              #create-target: src/main/resources/ddl.sql  GERA O DDL DO PROJETO AUTOMATICAMENTE
 email:
   emailHost: imap.gmail.com
   emailPort: 993
