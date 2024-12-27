@@ -99,6 +99,6 @@ VALUES (1, 50.00, 5.00, UTC_TIMESTAMP(), UTC_TIMESTAMP(), DATE_ADD(UTC_TIMESTAMP
 INSERT INTO order_table (id, sub_total, shipping_fee, registration_date, change_date, delivery_date, status, payment_method_id, client_id, restaurant_id, address_zip_code, address_public_place, address_number, address_complement, address_neighborhood, address_city_id)
 VALUES (2, 75.00, 7.50, UTC_TIMESTAMP(), UTC_TIMESTAMP(), DATE_ADD(UTC_TIMESTAMP(), INTERVAL 3 DAY), 'CREATED', 2, 2, 2, '62705', '2nd St', '456', 'Suite B', 'Uptown', 2);
 
-INSERT INTO order_item (id, quantity, unit_price, order_id, product_id) VALUES (1, 2, 25.00, 1, 3);
-INSERT INTO order_item (id, quantity, unit_price, order_id, product_id) VALUES (2, 1, 50.00, 2, 5);
+INSERT INTO order_item (id, quantity, unit_price, total_price, order_id, product_id) VALUES (1, 2, 25.00, 50.00, 1, 3);
+INSERT INTO order_item (id, quantity, unit_price, total_price, order_id, product_id) VALUES (2, 1, 50.00, 50.00, 2, 5);
 

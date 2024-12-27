@@ -24,9 +24,12 @@ CREATE TABLE order_table (
 
 CREATE TABLE order_item (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    unit_price DECIMAL(19, 2),
-    total_price DECIMAL(19, 2),
+    unit_price DECIMAL(19, 2) NOT NULL,
+    total_price DECIMAL(19, 2) NOT NULL,
     observation VARCHAR(255),
-    order_id BIGINT,
-    FOREIGN KEY (order_id) REFERENCES order_table(id)
+    quantity BIGINT NOT NULL,
+    order_id BIGINT NOT NULL,
+    product_id BIGINT NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES order_table(id),
+    FOREIGN KEY (product_id) REFERENCES product(id)
 ) ENGINE=INNODB DEFAULT CHARSET = utf8;
