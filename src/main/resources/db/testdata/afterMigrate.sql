@@ -12,6 +12,8 @@ delete from restaurant;
 delete from restaurant_payment_method;
 delete from user_table;
 delete from user_groups;
+delete from order_table;
+delete from order_item;
 
 set foreign_key_checks = 1;
 
@@ -24,6 +26,9 @@ alter table permission auto_increment = 1;
 alter table product auto_increment = 1;
 alter table restaurant auto_increment = 1;
 alter table user_table auto_increment = 1;
+alter table user_groups auto_increment = 1;
+alter table order_table auto_increment = 1;
+alter table order_item auto_increment = 1;
 
 insert into kitchen (id, name) values (1, 'Tailandesa');
 insert into kitchen (id, name) values (2, 'Indiana');
@@ -70,3 +75,26 @@ insert into product (name, description, price, active, restaurant_id) values ('T
 insert into product (name, description, price, active, restaurant_id) values ('Sanduíche X-Tudo', 'Sandubão com muito queijo, hamburger bovino, bacon, ovo, salada e maionese', 19, 1, 5);
 
 insert into product (name, description, price, active, restaurant_id) values ('Espetinho de Cupim', 'Acompanha farinha, mandioca e vinagrete', 8, 1, 6);
+
+INSERT INTO group_table (id, name) VALUES (1, 'Admin');
+INSERT INTO group_table (id, name) VALUES (2, 'User');
+INSERT INTO group_table (id, name) VALUES (3, 'Manager');
+
+INSERT INTO user_table (id, name, email, password, registration_date)
+VALUES (1, 'Lucas Ferreira', 'lucas@example.com', 'password123', UTC_TIMESTAMP());
+
+INSERT INTO user_table (id, name, email, password, registration_date)
+VALUES (2, 'Maria Silva', 'maria@example.com', 'password123', UTC_TIMESTAMP());
+
+INSERT INTO user_table (id, name, email, password, registration_date)
+VALUES (3, 'João Souza', 'joao@example.com', 'password123', UTC_TIMESTAMP());
+
+INSERT INTO user_groups (user_id, group_id) VALUES (1, 1);
+INSERT INTO user_groups (user_id, group_id) VALUES (2, 2);
+INSERT INTO user_groups (user_id, group_id) VALUES (3, 3);
+
+INSERT INTO order_table (id, sub_total, shipping_fee, registration_date, change_date, delivery_date, status, payment_method_id, client_id, restaurant_id, address_zip_code, address_public_place, address_number, address_complement, address_neighborhood, address_city_id)
+VALUES (1, 50.00, 5.00, UTC_TIMESTAMP(), UTC_TIMESTAMP(), DATE_ADD(UTC_TIMESTAMP(), INTERVAL 2 DAY), 'CREATED', 1, 1, 1, '62704', 'Main St', '123', 'Apt 4', 'Downtown', 1);
+
+INSERT INTO order_table (id, sub_total, shipping_fee, registration_date, change_date, delivery_date, status, payment_method_id, client_id, restaurant_id, address_zip_code, address_public_place, address_number, address_complement, address_neighborhood, address_city_id)
+VALUES (2, 75.00, 7.50, UTC_TIMESTAMP(), UTC_TIMESTAMP(), DATE_ADD(UTC_TIMESTAMP(), INTERVAL 3 DAY), 'CREATED', 2, 2, 2, '62705', '2nd St', '456', 'Suite B', 'Uptown', 2);
