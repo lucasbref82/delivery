@@ -4,9 +4,8 @@ import br.com.delivery.utils.ResponseEntityUtils;
 import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.Kitchen;
 import br.com.delivery.v1.domain.service.KitchenService;
+import io.reactivex.rxjava3.core.Single;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,12 +18,20 @@ public class KitchenController {
 
     @GetMapping
     public ResponseEntity<GenericMessage> findAll() {
-        try {
-            return ResponseEntity.ok(GenericMessage.builder().success(true).result(kitchenService.findAll()).build());
-        } catch (Exception e) {
-            return ResponseEntityUtils.internalServerError(e);
-        }
-
+        return kitchenService.findAll()
+                .flatMap(kitchens ->
+                        Single.just(
+                                ResponseEntity
+                                        .ok(GenericMessage
+                                                .builder()
+                                                .success(true)
+                                                .result(kitchens)
+                                                .build()
+                                        )
+                        )
+                )
+                .onErrorReturn(ResponseEntityUtils::internalServerError)
+                .blockingGet();
     }
 
     @GetMapping("/{id}")
@@ -62,7 +69,7 @@ public class KitchenController {
 
     @PutMapping("/{id}")
     public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
-        return kitchenService.save(kitchen, id)
+        return kitchenService.update(kitchen, id)
                 .map(k ->
                         ResponseEntity
                                 .ok(GenericMessage

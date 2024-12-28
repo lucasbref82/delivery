@@ -11,9 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GenericMessage {
-
     private boolean success;
-
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Object message;
     @JsonInclude(JsonInclude.Include.NON_NULL)
