@@ -21,32 +21,31 @@ public class StateService {
     private final StateRepository stateRepository;
     private final SchedulersConfig schedulersConfig;
 
-    public List<State> findAll() {
+    public Maybe<List<State>> findAll() {
         return Maybe.fromCallable(stateRepository::findAll)
                 .subscribeOn(schedulersConfig.defaultScheduler())
                 .filter(state -> !state.isEmpty())
-                .switchIfEmpty(Maybe.just(List.of()))
-                .blockingGet();
+                .switchIfEmpty(Maybe.just(List.of()));
     }
 
-    public Maybe<State> findById(Long id) {
+    public Single<State> findById(Long id) {
         return Maybe.fromOptional(stateRepository.findById(id))
-                .switchIfEmpty(Maybe.error(new NotFoundException(Utils.format("State of id {} not found.", id))));
+                .toSingle()
+                .onErrorResumeNext(e -> Single.error(new NotFoundException(Utils.format("State of id {} not found."))));
     }
 
-    public  Maybe<State> save(State state) {
-        return Maybe.fromOptional(Optional.of(stateRepository.save(state)));
+    public  Single<State> save(State state) {
+        return Single.fromCallable(() -> stateRepository.save(state))
+                .onErrorResumeNext(e -> Single.error(new Exception("Error when trying to save state.")));
     }
 
     public Single<State> update(Long id, State state) {
         return findById(id)
                 .flatMap(s -> {
-                    BeanUtils.copyProperties(state, s);
-                    return Optional.of(stateRepository.save(s))
-                            .map(Maybe::just)
-                            .orElse(Maybe.error(new Exception("Failed to update state")));
+                    BeanUtils.copyProperties(state, s, "id");
+                    return Single.just(stateRepository.save(s));
                 })
-                .toSingle();
+                .onErrorResumeNext(e -> Single.error(new Exception("Error when trying to update state of id {}.")));
     }
 
     public void delete(Long id) {

@@ -5,7 +5,10 @@ import br.com.delivery.utils.Utils;
 import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.Restaurant;
 import br.com.delivery.v1.domain.entity.State;
+import br.com.delivery.v1.domain.exception.NotFoundException;
 import br.com.delivery.v1.domain.service.StateService;
+import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Single;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,25 +23,26 @@ public class StateController {
 
     @GetMapping
     public ResponseEntity<GenericMessage> findAll() {
-        try {
-            return ResponseEntity.ok(GenericMessage.builder().success(true).result(stateService.findAll()).build());
-        } catch (Exception e) {
-            return ResponseEntityUtils.genericMessageResponseEntity(e);
-        }
+        return stateService.findAll()
+                .flatMap(s -> Maybe.just(ResponseEntity.ok(GenericMessage.builder().success(true).result(s).build())))
+                .blockingGet();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<GenericMessage> findById(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok(GenericMessage
-                    .builder()
-                    .success(true)
-                    .result(stateService.findById(id).blockingGet())
-                    .build()
-            );
-        } catch (Exception e) {
-            return ResponseEntityUtils.genericMessageResponseEntity(e);
-        }
+        return stateService.findById(id)
+                .flatMap(s ->
+                        Single.just(
+                                ResponseEntity.ok(GenericMessage
+                                        .builder()
+                                        .success(true)
+                                        .result(s)
+                                        .build()
+                                )
+                        )
+                )
+                .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
+                .blockingGet();
     }
 
     @PostMapping
