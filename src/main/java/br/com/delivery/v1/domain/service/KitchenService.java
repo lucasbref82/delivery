@@ -2,6 +2,7 @@ package br.com.delivery.v1.domain.service;
 
 import br.com.delivery.configs.SchedulersConfig;
 import br.com.delivery.utils.Utils;
+import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.Kitchen;
 import br.com.delivery.v1.domain.exception.NotFoundException;
 import br.com.delivery.v1.domain.repository.KitchenRepository;
@@ -9,7 +10,9 @@ import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,7 +44,7 @@ public class KitchenService {
                 .onErrorResumeNext(e -> Single.error(new Exception(Utils.format("Erro while saving Kitchen."))));
     }
 
-    public Single<Kitchen> update(Kitchen kitchen, Long id){
+    public Single<Kitchen> update(Kitchen kitchen, Long id) {
         return Maybe.fromOptional(kitchenRepository.findById(id))
                 .flatMap(currentKitchen -> {
                     BeanUtils.copyProperties(kitchen, currentKitchen, "id");
@@ -55,9 +58,20 @@ public class KitchenService {
         Observable.fromIterable(kitchens).subscribeOn(schedulersConfig.defaultScheduler()).blockingSubscribe(kitchenRepository::save);
     }
 
-    public void deleteKitchen(Long id) {
-        var managedKitchen = findById(id).blockingGet();
-        kitchenRepository.delete(managedKitchen);
+    public Single<GenericMessage> deleteKitchen(Long id) {
+        return this.findById(id)
+                .flatMap(currentKitchen -> {
+                    kitchenRepository.deleteById(currentKitchen.getId());
+                    return Single.just(GenericMessage.builder()
+                            .message(Utils.format("Kitchen of id {} successfully deleted", id))
+                            .build());
+                })
+                .onErrorResumeNext(e -> {
+                    if (e.getCause() instanceof ConstraintViolationException) {
+                        return Single.error(new DataIntegrityViolationException(Utils.format("Error when trying to delete id {} kitchen because it is in use.", id)));
+                    }
+                    return Single.error(new Exception(Utils.format("Error when trying to delete id {} kitchen", id)));
+                });
     }
 
 }

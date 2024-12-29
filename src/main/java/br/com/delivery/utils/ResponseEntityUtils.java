@@ -19,39 +19,24 @@ public class ResponseEntityUtils {
 
     public static <T> ResponseEntity<GenericMessage> genericMessageResponseEntity(Throwable e, Class<T> t, Long id) {
         if (Objects.nonNull(t) && ((e instanceof DataIntegrityViolationException) || (e.getCause() instanceof DataIntegrityViolationException))) {
-            log.error(Utils.format("Error when deleting resource {} of id {}, cause {}", t.getSimpleName(), id, e.getMessage()), e);
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body(GenericMessage
-                            .builder()
-                            .message(Utils.format("Error when deleting resource {} of id {}.", t.getSimpleName(), id))
-                            .build()
-                    );
+            return getGenericMessageResponseEntity(e, Utils.format("Error when deleting resource {} of id {}.", t.getSimpleName(), id), HttpStatus.CONFLICT);
         }
 
         return genericMessageResponseEntity(e);
     }
 
     public static ResponseEntity<GenericMessage> genericMessageResponseEntity(Throwable e) {
-        if (e instanceof BusinessException || e.getCause() instanceof  BusinessException) {
+        if (e instanceof BusinessException || e.getCause() instanceof BusinessException) {
             return getGenericMessageResponseEntity(e, Utils.format("Business exception: {}", e.getMessage()), HttpStatus.BAD_REQUEST);
         }
         if (e instanceof NotFoundException || e.getCause() instanceof NotFoundException) {
             return getGenericMessageResponseEntity(e, Utils.format("Not found exception: {}", e.getMessage()), HttpStatus.NOT_FOUND);
         }
-        log.error(Utils.format("Unexpected error {}", e.getMessage()), e);
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(GenericMessage
-                        .builder()
-                        .success(false)
-                        .message(e.getMessage())
-                        .build()
-                );
+        return getGenericMessageResponseEntity(e, Utils.format("Unexpected error {}", e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private static ResponseEntity<GenericMessage> getGenericMessageResponseEntity(Throwable e, String formattedMessage, HttpStatus httpStatus) {
-        log.error(formattedMessage);
+        log.error(formattedMessage, e);
         return ResponseEntity
                 .status(httpStatus)
                 .body(GenericMessage.builder()
@@ -59,6 +44,4 @@ public class ResponseEntityUtils {
                         .message(e.getCause().getMessage())
                         .build());
     }
-
-
 }
