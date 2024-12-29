@@ -43,8 +43,7 @@ public class CityService {
                     .toSingle()
                     .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving city", e)));
         }
-        return Maybe.fromOptional(Optional.of(cityRepository.save(city)))
-                .toSingle()
+        return Single.fromCallable(() -> cityRepository.save(city))
                 .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving city", e)));
     }
 

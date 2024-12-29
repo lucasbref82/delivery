@@ -1,8 +1,15 @@
 package br.com.delivery.utils;
 
+import jakarta.persistence.Id;
+import lombok.NonNull;
 import org.slf4j.helpers.MessageFormatter;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Utils {
 
@@ -14,10 +21,10 @@ public class Utils {
         return MessageFormatter.basicArrayFormat(format, arguments);
     }
 
-    public static String gerarStringRandomica(int tamanho) {
+    public static String gerarStringRandomica(int lenght) {
         SecureRandom random = new SecureRandom();
-        StringBuilder stringBuilder = new StringBuilder(tamanho);
-        for (int i = 0; i < tamanho; i++) {
+        StringBuilder stringBuilder = new StringBuilder(lenght);
+        for (int i = 0; i < lenght; i++) {
             int randomAscii;
             int randomCategory = random.nextInt(3);
             randomAscii = switch (randomCategory) {
@@ -35,6 +42,5 @@ public class Utils {
         }
         return stringBuilder.toString();
     }
-
 
 }

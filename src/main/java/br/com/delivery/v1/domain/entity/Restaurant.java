@@ -14,10 +14,10 @@ import java.util.List;
 @Table(name = "restaurant")
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 public class Restaurant {
 
     @Id

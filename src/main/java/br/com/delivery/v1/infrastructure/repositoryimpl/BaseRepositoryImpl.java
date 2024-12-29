@@ -2,12 +2,10 @@ package br.com.delivery.v1.infrastructure.repositoryimpl;
 
 import br.com.delivery.v1.domain.repository.BaseRepository;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Id;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -54,18 +52,4 @@ public class BaseRepositoryImpl<T, ID> implements BaseRepository<T, ID> {
         entityManager.remove(managedObject);
     }
 
-    @SuppressWarnings("unchecked")
-    private ID getEntityId(T entity) {
-        return Arrays.stream(entity.getClass().getDeclaredFields())
-                .filter(f -> f.isAnnotationPresent(Id.class))
-                .findFirst()
-                .map(field -> {
-                    field.setAccessible(true);
-                    try {
-                        return (ID) field.get(entity);
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException("Failed to access entity ID field", e);
-                    }
-                }).orElse(null);
-    }
 }

@@ -15,8 +15,11 @@ public class CreateKitchenMain {
                 .run(args);
 
         var kitchenService = applicationContext.getBean(KitchenService.class);
-        var brasileira = Kitchen.builder().name("Brasileira").build();
-        var japonesa = Kitchen.builder().name("Japonesa").build();
+        var brasileira = new Kitchen();
+        brasileira.setName("Brasileira");
+        brasileira.setId(1L);
+        var japonesa = new Kitchen();
+        japonesa.setName("Japonesa");
         kitchenService.saveAll(List.of(brasileira, japonesa));
 
     }

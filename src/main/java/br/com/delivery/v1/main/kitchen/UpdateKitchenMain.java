@@ -15,8 +15,10 @@ public class UpdateKitchenMain {
 
         var kitchenService = applicationContext.getBean(KitchenService.class);
 
-        var kitchen = Kitchen.builder().name("Chinesa").build();
-        kitchenService.save(kitchen);
+        var chinesa = new Kitchen();
+        chinesa.setId(1L);
+        chinesa.setName("Chinesa");
+        kitchenService.save(chinesa);
 
 
     }

@@ -70,17 +70,17 @@ public class KitchenController {
     @PutMapping("/{id}")
     public ResponseEntity<GenericMessage> update(@PathVariable Long id, @RequestBody Kitchen kitchen) {
         return kitchenService.update(kitchen, id)
-                .map(k ->
-                        ResponseEntity
-                                .ok(GenericMessage
-                                        .builder()
-                                        .success(true)
-                                        .result(k)
-                                        .build()
-                                )
+                .map(k -> ResponseEntity
+                        .ok(GenericMessage
+                                .builder()
+                                .success(true)
+                                .result(k)
+                                .build()
+                        )
                 )
                 .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
                 .blockingGet();
+
     }
 
     @DeleteMapping("/{id}")

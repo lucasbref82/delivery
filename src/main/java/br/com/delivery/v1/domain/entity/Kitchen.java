@@ -4,18 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
+@Data
 @Entity
-@Table(name = "kitchen")
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Getter
-@Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@ToString
 public class Kitchen {
 
     @Id
@@ -28,7 +21,6 @@ public class Kitchen {
 
     @JsonIgnore
     @OneToMany(mappedBy = "kitchen")
-    @Builder.Default
-    private List<Restaurant> restaurants = new ArrayList<>();
+    private List<Restaurant> restaurants;
 
 }

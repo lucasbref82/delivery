@@ -20,7 +20,7 @@ public class FindKitchenMain {
                 .run(args);
 
         var kitchenService = applicationContext.getBean(KitchenService.class);
-        kitchenService.findAll().forEach(c -> System.out.println(c.getName()));
+        kitchenService.findAll().blockingGet().forEach(c -> System.out.println(c.getName()));
 
     }
 }
