@@ -22,7 +22,7 @@ public class RestaurantController {
     public ResponseEntity<GenericMessage> findAll() {
         return restaurantService.findAll()
                 .map(restaurant -> ResponseEntity.ok(GenericMessage.builder().success(true).result(restaurant).build()))
-                .onErrorReturn(ResponseEntityUtils::internalServerError)
+                .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
                 .blockingGet();
     }
 
@@ -30,7 +30,7 @@ public class RestaurantController {
     public ResponseEntity<GenericMessage> findById(@PathVariable Long id) {
         return restaurantService.findById(id)
                 .flatMap(r -> Maybe.just(ResponseEntity.ok(GenericMessage.builder().success(true).result(r).build())))
-                .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
+                .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
                 .blockingGet();
     }
 
@@ -48,7 +48,7 @@ public class RestaurantController {
                             .build()
                     );
         } catch (Exception e) {
-            return ResponseEntityUtils.internalServerError(e);
+            return ResponseEntityUtils.genericMessageResponseEntity(e);
         }
     }
 
@@ -66,7 +66,7 @@ public class RestaurantController {
                             )
                     );
                 })
-                .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
+                .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
                 .blockingGet();
     }
 
@@ -83,7 +83,7 @@ public class RestaurantController {
                             .build()
                     );
         } catch (Exception e) {
-            return ResponseEntityUtils.conflictNotFoundOrInternalServerError(e, Restaurant.class, id);
+            return ResponseEntityUtils.genericMessageResponseEntity(e, Restaurant.class, id);
         }
     }
 }

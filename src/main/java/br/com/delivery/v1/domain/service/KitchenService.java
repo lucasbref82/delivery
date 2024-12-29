@@ -5,11 +5,9 @@ import br.com.delivery.utils.Utils;
 import br.com.delivery.v1.domain.entity.Kitchen;
 import br.com.delivery.v1.domain.exception.NotFoundException;
 import br.com.delivery.v1.domain.repository.KitchenRepository;
-import br.com.delivery.v1.infrastructure.repositoryimpl.KitchenRepositoryImpl;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
-import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -24,7 +22,6 @@ public class KitchenService {
 
     private final KitchenRepository kitchenRepository;
     private final SchedulersConfig schedulersConfig;
-    private final KitchenRepositoryImpl kitchenRepositoryImpl;
 
     public Single<List<Kitchen>> findAll() {
         return Single.fromCallable(kitchenRepository::findAll)

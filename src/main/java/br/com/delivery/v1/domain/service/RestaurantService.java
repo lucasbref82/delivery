@@ -3,6 +3,7 @@ package br.com.delivery.v1.domain.service;
 import br.com.delivery.configs.SchedulersConfig;
 import br.com.delivery.utils.Utils;
 import br.com.delivery.v1.domain.entity.Restaurant;
+import br.com.delivery.v1.domain.exception.BusinessException;
 import br.com.delivery.v1.domain.exception.NotFoundException;
 import br.com.delivery.v1.domain.exception.ServiceException;
 import br.com.delivery.v1.domain.repository.RestaurantRepository;
@@ -47,7 +48,12 @@ public class RestaurantService {
                         restaurant.setKitchen(kitchen);
                         return Single.just(restaurantRepository.save(restaurant));
                     })
-                    .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving restaurant.", e)));
+                    .onErrorResumeNext(e -> {
+                        if (e.getCause() instanceof NotFoundException) {
+                            return Single.error(new BusinessException(Utils.format("Error while saving cause: {}", e.getMessage())));
+                        }
+                        return Single.error(new ServiceException("Error while saving restaurant.", e));
+                    });
         } else {
             return Maybe.just(restaurantRepository.save(restaurant))
                     .toSingle()

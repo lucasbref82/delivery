@@ -25,7 +25,7 @@ public class CityController {
                 .subscribeOn(schedulersConfig.defaultScheduler())
                 .map(s -> GenericMessage.builder().success(true).result(s).build())
                 .map(ResponseEntity::ok)
-                .onErrorReturn(ResponseEntityUtils::internalServerError)
+                .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
                 .blockingGet();
     }
 
@@ -35,7 +35,7 @@ public class CityController {
                 .subscribeOn(schedulersConfig.defaultScheduler())
                 .map(s -> GenericMessage.builder().success(true).result(s).build())
                 .map(ResponseEntity::ok)
-                .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
+                .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
                 .blockingGet();
     }
 
@@ -45,7 +45,7 @@ public class CityController {
                 .subscribeOn(schedulersConfig.defaultScheduler())
                 .map(c -> GenericMessage.builder().success(true).result(c).build())
                 .map(ResponseEntity::ok)
-                .onErrorReturn(ResponseEntityUtils::internalServerError)
+                .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
                 .blockingGet();
     }
 
@@ -65,7 +65,7 @@ public class CityController {
                             .blockingGet();
                 })
                 .map(ResponseEntity::ok)
-                .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
+                .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
                 .blockingGet();
     }
 
@@ -82,7 +82,7 @@ public class CityController {
                             .build()
                     );
         } catch (Exception e) {
-            return ResponseEntityUtils.conflictNotFoundOrInternalServerError(e, City.class, id);
+            return ResponseEntityUtils.genericMessageResponseEntity(e, City.class, id);
         }
     }
 }

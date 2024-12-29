@@ -30,7 +30,7 @@ public class KitchenController {
                                         )
                         )
                 )
-                .onErrorReturn(ResponseEntityUtils::internalServerError)
+                .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
                 .blockingGet();
     }
 
@@ -47,7 +47,7 @@ public class KitchenController {
                         )
 
                 )
-                .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
+                .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
                 .blockingGet();
     }
 
@@ -63,7 +63,7 @@ public class KitchenController {
                                         .result(k)
                                         .build())
                 )
-                .onErrorReturn(ResponseEntityUtils::internalServerError)
+                .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
                 .blockingGet();
     }
 
@@ -78,7 +78,7 @@ public class KitchenController {
                                 .build()
                         )
                 )
-                .onErrorReturn(ResponseEntityUtils::notFoundOrInternalServerError)
+                .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
                 .blockingGet();
 
     }
@@ -89,7 +89,7 @@ public class KitchenController {
             kitchenService.deleteKitchen(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            return ResponseEntityUtils.conflictNotFoundOrInternalServerError(e, Kitchen.class, id);
+            return ResponseEntityUtils.genericMessageResponseEntity(e, Kitchen.class, id);
         }
     }
 }

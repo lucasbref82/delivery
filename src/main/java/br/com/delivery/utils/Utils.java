@@ -1,15 +1,8 @@
 package br.com.delivery.utils;
 
-import jakarta.persistence.Id;
-import lombok.NonNull;
 import org.slf4j.helpers.MessageFormatter;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Utils {
 

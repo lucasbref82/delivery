@@ -1,6 +1,7 @@
 package br.com.delivery.utils;
 
 import br.com.delivery.v1.domain.dto.GenericMessage;
+import br.com.delivery.v1.domain.exception.BusinessException;
 import br.com.delivery.v1.domain.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,7 +17,7 @@ public class ResponseEntityUtils {
 
     }
 
-    public static <T> ResponseEntity<GenericMessage> conflictNotFoundOrInternalServerError(Throwable e, Class<T> t, Long id) {
+    public static <T> ResponseEntity<GenericMessage> genericMessageResponseEntity(Throwable e, Class<T> t, Long id) {
         if (Objects.nonNull(t) && ((e instanceof DataIntegrityViolationException) || (e.getCause() instanceof DataIntegrityViolationException))) {
             log.error(Utils.format("Error when deleting resource {} of id {}, cause {}", t.getSimpleName(), id, e.getMessage()), e);
             return ResponseEntity
@@ -28,24 +29,16 @@ public class ResponseEntityUtils {
                     );
         }
 
-        return notFoundOrInternalServerError(e);
+        return genericMessageResponseEntity(e);
     }
 
-    public static ResponseEntity<GenericMessage> notFoundOrInternalServerError(Throwable e) {
-        if (e instanceof NotFoundException || (e.getCause() instanceof NotFoundException)) {
-            log.error(Utils.format("Not found {}", e.getMessage()), e);
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(GenericMessage.builder()
-                            .success(false)
-                            .message(e.getCause().getMessage())
-                            .build());
+    public static ResponseEntity<GenericMessage> genericMessageResponseEntity(Throwable e) {
+        if (e instanceof BusinessException || e.getCause() instanceof  BusinessException) {
+            return getGenericMessageResponseEntity(e, Utils.format("Business exception: {}", e.getMessage()), HttpStatus.BAD_REQUEST);
         }
-        return internalServerError(e);
-    }
-
-
-    public static ResponseEntity<GenericMessage> internalServerError(Throwable e) {
+        if (e instanceof NotFoundException || e.getCause() instanceof NotFoundException) {
+            return getGenericMessageResponseEntity(e, Utils.format("Not found exception: {}", e.getMessage()), HttpStatus.NOT_FOUND);
+        }
         log.error(Utils.format("Unexpected error {}", e.getMessage()), e);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -56,4 +49,16 @@ public class ResponseEntityUtils {
                         .build()
                 );
     }
+
+    private static ResponseEntity<GenericMessage> getGenericMessageResponseEntity(Throwable e, String formattedMessage, HttpStatus httpStatus) {
+        log.error(formattedMessage);
+        return ResponseEntity
+                .status(httpStatus)
+                .body(GenericMessage.builder()
+                        .success(false)
+                        .message(e.getCause().getMessage())
+                        .build());
+    }
+
+
 }

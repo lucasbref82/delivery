@@ -23,7 +23,7 @@ public class StateController {
         try {
             return ResponseEntity.ok(GenericMessage.builder().success(true).result(stateService.findAll()).build());
         } catch (Exception e) {
-            return ResponseEntityUtils.internalServerError(e);
+            return ResponseEntityUtils.genericMessageResponseEntity(e);
         }
     }
 
@@ -37,7 +37,7 @@ public class StateController {
                     .build()
             );
         } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
+            return ResponseEntityUtils.genericMessageResponseEntity(e);
         }
     }
 
@@ -56,7 +56,7 @@ public class StateController {
                             .build()
                     );
         } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
+            return ResponseEntityUtils.genericMessageResponseEntity(e);
         }
     }
 
@@ -74,7 +74,7 @@ public class StateController {
                             .build()
                     );
         } catch (Exception e) {
-            return ResponseEntityUtils.notFoundOrInternalServerError(e);
+            return ResponseEntityUtils.genericMessageResponseEntity(e);
         }
     }
 
@@ -91,7 +91,7 @@ public class StateController {
                             .build()
                     );
         } catch (Exception e) {
-            return ResponseEntityUtils.conflictNotFoundOrInternalServerError(e, Restaurant.class, id);
+            return ResponseEntityUtils.genericMessageResponseEntity(e, Restaurant.class, id);
         }
     }
 
