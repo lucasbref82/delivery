@@ -1,6 +1,7 @@
 package br.com.delivery.v1.domain.service;
 
 import br.com.delivery.utils.Utils;
+import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.City;
 import br.com.delivery.v1.domain.exception.NotFoundException;
 import br.com.delivery.v1.domain.exception.ServiceException;
@@ -38,17 +39,23 @@ public class CityService {
             return stateService.findById(city.getState().getId())
                     .flatMap(state -> {
                         city.setState(state);
-                        return Maybe.just(cityRepository.save(city));
+                        return Single.just(cityRepository.save(city));
                     })
-                    .toSingle()
                     .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving city", e)));
         }
         return Single.fromCallable(() -> cityRepository.save(city))
                 .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving city", e)));
     }
 
-    public void delete(Long id) {
-        findById(id)
-                .blockingSubscribe(cityRepository::delete);
+    public Single<GenericMessage> delete(Long id) {
+        return findById(id)
+                .flatMap(x -> {
+                    cityRepository.delete(x);
+                    return Single.just(GenericMessage
+                            .builder()
+                            .success(true)
+                            .message(Utils.format("City of id {} deleted with successfully.", id))
+                            .build());
+                }).onErrorResumeNext(e -> Single.error(new Exception(Utils.format("Error when trying to delete city id {}", id))));
     }
 }

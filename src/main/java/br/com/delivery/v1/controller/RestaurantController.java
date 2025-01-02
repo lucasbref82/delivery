@@ -5,6 +5,7 @@ import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.Restaurant;
 import br.com.delivery.v1.domain.service.RestaurantService;
 import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Single;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -36,20 +37,20 @@ public class RestaurantController {
 
     @PostMapping()
     public ResponseEntity<GenericMessage> save(@RequestBody Restaurant restaurant) {
-        try {
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(GenericMessage
-                            .builder()
-                            .success(true)
-                            .message("Succesfully save resturant.")
-                            .result(restaurantService
-                                    .save(restaurant))
-                            .build()
-                    );
-        } catch (Exception e) {
-            return ResponseEntityUtils.genericMessageResponseEntity(e);
-        }
+        return restaurantService.save(restaurant)
+                .flatMap(r ->
+                        Single.just(
+                                ResponseEntity
+                                        .status(HttpStatus.CREATED)
+                                        .body(
+                                                GenericMessage
+                                                        .builder()
+                                                        .success(true)
+                                                        .result(r)
+                                                        .build())
+                        )
+                ).onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
+                .blockingGet();
     }
 
     @PutMapping("/{id}")
@@ -57,7 +58,7 @@ public class RestaurantController {
         return restaurantService.findById(id)
                 .flatMap(r -> {
                     BeanUtils.copyProperties(restaurant, r, "id", "address", "paymentMethods", "resgistrationDate");
-                    return Maybe.just(ResponseEntity
+                    return Single.just(ResponseEntity
                             .ok(GenericMessage
                                     .builder()
                                     .success(true)

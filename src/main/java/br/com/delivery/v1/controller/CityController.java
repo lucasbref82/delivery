@@ -5,6 +5,7 @@ import br.com.delivery.utils.ResponseEntityUtils;
 import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.City;
 import br.com.delivery.v1.domain.service.CityService;
+import io.reactivex.rxjava3.core.Single;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -57,10 +58,10 @@ public class CityController {
                     BeanUtils.copyProperties(city, existingCity, "id");
                     return cityService.save(existingCity)
                             .map(c -> GenericMessage
-                                        .builder()
-                                        .success(true)
-                                        .result(c)
-                                        .build()
+                                    .builder()
+                                    .success(true)
+                                    .result(c)
+                                    .build()
                             )
                             .blockingGet();
                 })
@@ -71,18 +72,9 @@ public class CityController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<GenericMessage> delete(@PathVariable Long id) {
-        try {
-            cityService.delete(id);
-            return ResponseEntity
-                    .status(HttpStatus.NO_CONTENT)
-                    .body(GenericMessage
-                            .builder()
-                            .success(true)
-                            .message("Restaurant successfully deleted.")
-                            .build()
-                    );
-        } catch (Exception e) {
-            return ResponseEntityUtils.genericMessageResponseEntity(e, City.class, id);
-        }
+        return cityService.delete(id)
+                .flatMap(r -> Single.just(ResponseEntity.status(HttpStatus.NO_CONTENT).body(r)))
+                .onErrorReturn(e -> ResponseEntityUtils.genericMessageResponseEntity(e, City.class, id))
+                .blockingGet();
     }
 }

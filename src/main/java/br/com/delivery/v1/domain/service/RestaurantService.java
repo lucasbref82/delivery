@@ -36,9 +36,10 @@ public class RestaurantService {
                 .switchIfEmpty(Maybe.just(List.of()));
     }
 
-    public Maybe<Restaurant> findById(Long id) {
+    public Single<Restaurant> findById(Long id) {
         return Maybe.fromOptional(restaurantRepository.findById(id))
-                .switchIfEmpty(Maybe.error(new NotFoundException(Utils.format("Restaurant with id {} not found"))));
+                .switchIfEmpty(Maybe.error(new NotFoundException(Utils.format("Restaurant with id {} not found"))))
+                .toSingle();
     }
 
     public Single<Restaurant> save(Restaurant restaurant) {
@@ -55,8 +56,7 @@ public class RestaurantService {
                         return Single.error(new ServiceException("Error while saving restaurant.", e));
                     });
         } else {
-            return Maybe.just(restaurantRepository.save(restaurant))
-                    .toSingle()
+            return Single.fromCallable(() -> restaurantRepository.save(restaurant))
                     .onErrorResumeNext(e -> Single.error(new ServiceException("Error while saving restaurant.", e)));
         }
     }
