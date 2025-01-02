@@ -29,6 +29,7 @@ dependencies {
     implementation 'org.flywaydb:flyway-mysql'
     implementation 'mysql:mysql-connector-java:8.0.33'
     implementation 'io.reactivex.rxjava3:rxjava:3.1.10'
+    implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
 
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'

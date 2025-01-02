@@ -6,6 +6,7 @@ import br.com.delivery.v1.domain.entity.Restaurant;
 import br.com.delivery.v1.domain.service.RestaurantService;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.internal.schedulers.NewThreadScheduler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
@@ -30,12 +31,19 @@ public class RestaurantController {
     @GetMapping("/{id}")
     public ResponseEntity<GenericMessage> findById(@PathVariable Long id) {
         return restaurantService.findById(id)
-                .flatMap(r -> Maybe.just(ResponseEntity.ok(GenericMessage.builder().success(true).result(r).build())))
+                .flatMap(r -> Single.just(ResponseEntity
+                                .ok(GenericMessage
+                                        .builder()
+                                        .success(true)
+                                        .result(r)
+                                        .build()
+                                ))
+                )
                 .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
                 .blockingGet();
     }
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<GenericMessage> save(@RequestBody Restaurant restaurant) {
         return restaurantService.save(restaurant)
                 .flatMap(r ->
@@ -47,7 +55,8 @@ public class RestaurantController {
                                                         .builder()
                                                         .success(true)
                                                         .result(r)
-                                                        .build())
+                                                        .build()
+                                        )
                         )
                 ).onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
                 .blockingGet();
