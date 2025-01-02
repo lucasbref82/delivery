@@ -47,39 +47,39 @@ public class StateController {
 
     @PostMapping
     public ResponseEntity<GenericMessage> save(@RequestBody State state) {
-        try {
-            return ResponseEntity
-                    .status(HttpStatus.CREATED)
-                    .body(GenericMessage
-                            .builder()
-                            .success(true)
-                            .result(stateService
-                                    .save(state)
-                                    .blockingGet()
-                            )
-                            .build()
-                    );
-        } catch (Exception e) {
-            return ResponseEntityUtils.genericMessageResponseEntity(e);
-        }
+        return stateService.save(state)
+                .flatMap(s ->
+                        Single
+                                .just(
+                                        ResponseEntity
+                                                .status(HttpStatus.CREATED)
+                                                .body(
+                                                        GenericMessage
+                                                                .builder()
+                                                                .success(true)
+                                                                .result(s)
+                                                                .build()
+                                                )
+                                )
+                ).onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
+                .blockingGet();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<GenericMessage> update(@RequestBody State state, @PathVariable Long id) {
-        try {
-            return ResponseEntity
-                    .ok(GenericMessage
-                            .builder()
-                            .success(true)
-                            .result(stateService
-                                    .update(id, state)
-                                    .blockingGet()
-                            )
-                            .build()
-                    );
-        } catch (Exception e) {
-            return ResponseEntityUtils.genericMessageResponseEntity(e);
-        }
+        return stateService.update(id, state)
+                .map(s ->
+                        ResponseEntity
+                                .ok()
+                                .body(GenericMessage
+                                        .builder()
+                                        .result(s)
+                                        .success(true)
+                                        .build()
+                                )
+                )
+                .onErrorReturn(ResponseEntityUtils::genericMessageResponseEntity)
+                .blockingGet();
     }
 
     @DeleteMapping("/{id}")
