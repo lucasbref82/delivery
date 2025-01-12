@@ -1,6 +1,9 @@
 package br.com.delivery.v1.domain.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,9 +30,12 @@ public class Restaurant {
     private Long id;
 
     @NotNull
+    @NotEmpty
+    @NotBlank
     @Column(name = "name", length = 30, nullable = false)
     private String name;
 
+    @DecimalMin("1")
     @Column(name = "shipping_fee", precision = 10, scale = 2, nullable = false)
     private BigDecimal shippingFee;
 
