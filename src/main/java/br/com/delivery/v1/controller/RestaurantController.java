@@ -1,24 +1,32 @@
 package br.com.delivery.v1.controller;
 
 import br.com.delivery.utils.ResponseEntityUtils;
+import br.com.delivery.utils.Utils;
 import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.Restaurant;
 import br.com.delivery.v1.domain.service.RestaurantService;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.internal.schedulers.NewThreadScheduler;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @RestController
 @RequestMapping("v1/restaurants")
 @RequiredArgsConstructor
+@Slf4j
 public class RestaurantController {
 
     private final RestaurantService restaurantService;
+    private final Validator validator;
 
     @GetMapping
     public ResponseEntity<GenericMessage> findAll() {
@@ -45,6 +53,23 @@ public class RestaurantController {
 
     @PostMapping
     public ResponseEntity<GenericMessage> save(@RequestBody Restaurant restaurant) {
+        Set<ConstraintViolation<Restaurant>> violations = validator.validate(restaurant);
+        if (!violations.isEmpty()) {
+            var e = new RuntimeException("Validation error");
+            for (ConstraintViolation<Restaurant> violation : violations) {
+                log.error("Validation error {} : {}", violation.getPropertyPath(), violation.getMessage(), e);
+            }
+            return ResponseEntity
+                    .badRequest()
+                    .body(GenericMessage
+                            .builder()
+                            .success(false)
+                            .message("Validation error")
+                            .result(violations
+                                    .stream()
+                                    .map(v -> Utils.format("{} : {}", v.getPropertyPath(), v.getMessage()))).build());
+        }
+
         return restaurantService.save(restaurant)
                 .flatMap(r ->
                         Single.just(
