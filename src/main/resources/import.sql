@@ -18,7 +18,7 @@ INSERT INTO city (name, state_id) values ("Goiânia", 2);
 INSERT INTO city (name, state_id) values ("Natal.", 3);
 INSERT INTO city (name, state_id) values ("Maceió", 4);
 
-INSERT INTO restaurant (name, shipping_fee, kitchen_id, registration_date, change_date,  address_city_id, address_zip_code, address_public_place, address_number, address_neighborhood) VALUES ('Thai Gourmet', 10.00, 1, utc_timestamp, utc_timestamp, 1, '38400-999', 'Rua João Pinheiro', '1000', 'Centro');
+INSERT INTO restaurant (name, shipping_fee, kitchen_id, registration_date, change_date,  address_city_id, address_zip_code, address_public_place, address_number, address_neighborhood) VALUES ('Thai Gourmet', 10.00, 1, utc_timestamp, utc_timestamp, 1, '38400999', 'Rua João Pinheiro', '1000', 'Centro');
 INSERT INTO restaurant (name, shipping_fee, kitchen_id, registration_date, change_date) VALUES ('Sabor Samosa', 25.65, 2, utc_timestamp, utc_timestamp);
 INSERT INTO restaurant (name, shipping_fee, kitchen_id, registration_date, change_date) VALUES ('Coco Bambu', 50.00, 3, utc_timestamp, utc_timestamp);
 INSERT INTO restaurant (name, shipping_fee, kitchen_id, registration_date, change_date) VALUES ('Sushi Sakura', 100.00, 4, utc_timestamp, utc_timestamp);

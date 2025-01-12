@@ -24,7 +24,7 @@ CREATE TABLE restaurant (
   kitchen_id bigint NOT NULL,
   registration_date datetime,
   change_date datetime,
-  address_zip_code varchar(8),
+  address_zip_code varchar(255),
   address_public_place varchar(255),
   address_number varchar(60),
   address_complement varchar(255),
