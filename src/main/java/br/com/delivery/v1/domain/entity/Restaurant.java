@@ -26,6 +26,7 @@ public class Restaurant {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @NotNull
     @Column(name = "name", length = 30, nullable = false)
     private String name;
 

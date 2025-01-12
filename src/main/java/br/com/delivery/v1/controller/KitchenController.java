@@ -1,22 +1,32 @@
 package br.com.delivery.v1.controller;
 
 import br.com.delivery.utils.ResponseEntityUtils;
+import br.com.delivery.utils.Utils;
 import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.Kitchen;
 import br.com.delivery.v1.domain.service.KitchenService;
 import io.reactivex.rxjava3.core.Single;
+import jakarta.validation.Constraint;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @RestController
 @RequestMapping("/v1/kitchens")
 @RequiredArgsConstructor
+@Slf4j
 public class KitchenController {
 
     private final KitchenService kitchenService;
+    private final Validator validator;
 
     @GetMapping
     public ResponseEntity<GenericMessage> findAll() {
@@ -55,6 +65,21 @@ public class KitchenController {
 
     @PostMapping
     public ResponseEntity<GenericMessage> create(@RequestBody Kitchen kitchen) {
+        Set<ConstraintViolation<Kitchen>> violations = validator.validate(kitchen);
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<Kitchen> violation : violations) {
+                log.error("Error when registering kitchen {} - {}", violation.getPropertyPath(), violation.getMessage());
+            }
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(GenericMessage
+                            .builder()
+                            .success(false)
+                            .message("Erro de validação.")
+                            .result(violations.stream().map(v -> Utils.format("{} - {}", v.getPropertyPath(), v.getMessage())))
+                            .build()
+                    );
+        }
         return kitchenService.save(kitchen)
                 .map(k ->
                         ResponseEntity
