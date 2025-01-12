@@ -65,21 +65,6 @@ public class KitchenController {
 
     @PostMapping
     public ResponseEntity<GenericMessage> create(@RequestBody Kitchen kitchen) {
-        Set<ConstraintViolation<Kitchen>> violations = validator.validate(kitchen);
-        if (!violations.isEmpty()) {
-            for (ConstraintViolation<Kitchen> violation : violations) {
-                log.error("Error when registering kitchen {} - {}", violation.getPropertyPath(), violation.getMessage());
-            }
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(GenericMessage
-                            .builder()
-                            .success(false)
-                            .message("Erro de validação.")
-                            .result(violations.stream().map(v -> Utils.format("{} - {}", v.getPropertyPath(), v.getMessage())))
-                            .build()
-                    );
-        }
         return kitchenService.save(kitchen)
                 .map(k ->
                         ResponseEntity

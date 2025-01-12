@@ -2,6 +2,7 @@ package br.com.delivery.v1.controller;
 
 import br.com.delivery.utils.ResponseEntityUtils;
 import br.com.delivery.utils.Utils;
+import br.com.delivery.utils.ValidationUtils;
 import br.com.delivery.v1.domain.dto.GenericMessage;
 import br.com.delivery.v1.domain.entity.Restaurant;
 import br.com.delivery.v1.domain.service.RestaurantService;
@@ -53,23 +54,8 @@ public class RestaurantController {
 
     @PostMapping
     public ResponseEntity<GenericMessage> save(@RequestBody Restaurant restaurant) {
-        Set<ConstraintViolation<Restaurant>> violations = validator.validate(restaurant);
-        if (!violations.isEmpty()) {
-            var e = new RuntimeException("Validation error");
-            for (ConstraintViolation<Restaurant> violation : violations) {
-                log.error("Validation error {} : {}", violation.getPropertyPath(), violation.getMessage(), e);
-            }
-            return ResponseEntity
-                    .badRequest()
-                    .body(GenericMessage
-                            .builder()
-                            .success(false)
-                            .message("Validation error")
-                            .result(violations
-                                    .stream()
-                                    .map(v -> Utils.format("{} : {}", v.getPropertyPath(), v.getMessage()))).build());
-        }
-
+        ResponseEntity<GenericMessage> response = ValidationUtils.validate(restaurant);
+        if (response != null) return response;
         return restaurantService.save(restaurant)
                 .flatMap(r ->
                         Single.just(
