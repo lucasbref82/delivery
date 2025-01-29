@@ -1,0 +1,51 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.2'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'br.com'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+
+	// Dependências Spring Boot
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// Dependência para trabalhar com e-mail
+	implementation 'com.sun.mail:jakarta.mail:2.0.1'
+
+	// Trabalhar com arquivos de texto
+	implementation 'org.apache.commons:commons-text:1.13.0'
+
+	// Banco de dados
+	implementation 'mysql:mysql-connector-java:8.0.33'
+
+	// Lombok
+	implementation 'org.projectlombok:lombok' // Para uso em tempo de execução
+	compileOnly 'org.projectlombok:lombok'// Apenas para compilação
+	annotationProcessor 'org.projectlombok:lombok' // Processador de anotações do Lombok
+
+	// Dependências para desenvolvimento
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// Dependências para testes
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
