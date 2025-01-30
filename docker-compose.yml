@@ -1,0 +1,22 @@
+services:
+  api_delivery:
+    image: mysql:8.0
+    container_name: API_DELIVERY
+    environment:
+      MYSQL_ROOT_PASSWORD: acesso_root
+      MYSQL_DATABASE: delivery
+    ports:
+      - "127.0.0.1:3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - api_network
+
+volumes:
+  mysql_data:
+    external: false
+
+networks:
+  api_network:
+    driver: bridge
