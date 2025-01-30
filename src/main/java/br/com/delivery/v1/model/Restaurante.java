@@ -7,6 +7,8 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "restaurante")
 @Data
@@ -20,4 +22,7 @@ public class Restaurante {
 
     @Column
     private String nome;
+
+    @Column
+    private BigDecimal taxaFrete;
 }
