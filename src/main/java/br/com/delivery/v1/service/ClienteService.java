@@ -14,7 +14,6 @@ public class ClienteService {
     @Autowired
     private Notificador notificador;
 
-
     public void ativar(Cliente cliente) {
         cliente.ativar();
         notificador.notificar("Seu cadastro está ativo !", cliente);
