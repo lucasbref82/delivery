@@ -1,4 +1,4 @@
-package br.com.delivery.v1.main;
+package br.com.delivery.v1.main.cozinha.crud;
 
 import br.com.delivery.v1.model.Cozinha;
 import jakarta.persistence.EntityManager;
@@ -24,11 +24,17 @@ public class CozinhaCrud {
     }
 
     @Transactional
-    public Cozinha adicionar(Cozinha cozinha) {
+    public Cozinha salvar(Cozinha cozinha) {
         return manager.merge(cozinha);
     }
 
     public Cozinha buscar(Integer id) {
         return manager.find(Cozinha.class, id);
+    }
+
+    @Transactional
+    public void deletar(Cozinha cozinha) {
+        Cozinha cozinhaAtual = buscar(cozinha.getId());
+        manager.remove(cozinhaAtual);
     }
 }
