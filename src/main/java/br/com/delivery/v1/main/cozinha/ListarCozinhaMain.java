@@ -1,7 +1,7 @@
 package br.com.delivery.v1.main.cozinha;
 
 import br.com.delivery.DeliveryApplication;
-import br.com.delivery.v1.main.cozinha.crud.CozinhaCrud;
+import br.com.delivery.v1.repository.impl.CozinhaRepositoryImpl;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContext;
@@ -13,8 +13,8 @@ public class ListarCozinhaMain {
                 .web(WebApplicationType.NONE)
                 .run(args);
 
-        CozinhaCrud cozinhaCrud = applicationContext.getBean(CozinhaCrud.class);
-        cozinhaCrud.listar().forEach(cozinha -> System.out.println(cozinha.getNome()));
+        CozinhaRepositoryImpl cozinhaRepositoryImpl = applicationContext.getBean(CozinhaRepositoryImpl.class);
+        cozinhaRepositoryImpl.listar().forEach(cozinha -> System.out.println(cozinha.getNome()));
     }
 
 
