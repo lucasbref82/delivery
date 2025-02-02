@@ -33,6 +33,9 @@ dependencies {
 	// Banco de dados
 	implementation 'mysql:mysql-connector-java:8.0.33'
 
+	// Serializador e desserializador
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.18.2'
+
 	// Lombok
 	implementation 'org.projectlombok:lombok' // Para uso em tempo de execução
 	compileOnly 'org.projectlombok:lombok'// Apenas para compilação
