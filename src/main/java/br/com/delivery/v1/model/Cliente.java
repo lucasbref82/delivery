@@ -1,5 +1,12 @@
 package br.com.delivery.v1.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cliente {
 
     private String nome;
@@ -7,45 +14,6 @@ public class Cliente {
     private String telefone;
     private boolean ativo = false;
 
-
-    public Cliente() {
-
-    }
-
-    public Cliente(String nome, String email, String telefone) {
-        this.nome = nome;
-        this.email = email;
-        this.telefone = telefone;
-    }
-
-
-    public boolean isAtivo() {
-        return ativo;
-    }
-
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
 
     public void ativar() {
         this.ativo = true;

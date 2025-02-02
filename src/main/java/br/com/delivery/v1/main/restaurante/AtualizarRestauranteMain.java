@@ -1,7 +1,6 @@
 package br.com.delivery.v1.main.restaurante;
 
 import br.com.delivery.DeliveryApplication;
-import br.com.delivery.v1.model.Cozinha;
 import br.com.delivery.v1.model.Restaurante;
 import br.com.delivery.v1.repository.impl.RestauranteRepositoryImpl;
 import org.springframework.boot.WebApplicationType;

@@ -16,7 +16,7 @@ public class ClienteController {
 
     @GetMapping
     public void ativaCliente() {
-        Cliente cliente = new Cliente("Joao", "joao@xpto.com.br","31994372780");
+        Cliente cliente = new Cliente("Joao", "joao@xpto.com.br", "31994372780", false);
         clienteService.ativar(cliente);
     }
 
