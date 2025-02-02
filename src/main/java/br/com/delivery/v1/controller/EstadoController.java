@@ -1,6 +1,7 @@
 package br.com.delivery.v1.controller;
 
 import br.com.delivery.v1.model.Estado;
+import br.com.delivery.v1.model.wrapper.EstadosWrapper;
 import br.com.delivery.v1.service.EstadoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -18,12 +19,17 @@ public class EstadoController {
 
     private final EstadoService estadoService;
 
-    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping
     public List<Estado> listar() {
         return estadoService.listar();
     }
 
-    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
+    public EstadosWrapper listarXml() {
+        return new EstadosWrapper(estadoService.listar());
+    }
+
+    @GetMapping("/{id}")
     public Estado buscar(@PathVariable Integer id) {
         return estadoService.buscar(id);
     }
