@@ -16,7 +16,6 @@ public class EstadosWrapper {
 
     // Alterando o nome da propriedade para estados
     @JacksonXmlProperty(localName = "estado")
-
     // Desabilita o embrulho que o xml tem
     @JacksonXmlElementWrapper(useWrapping = false)
     @NonNull
