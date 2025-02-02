@@ -16,4 +16,8 @@ public class RestauranteService {
     public List<Restaurante> listar() {
         return restauranteRepository.listar();
     }
+
+    public Restaurante buscar(Integer id) {
+        return restauranteRepository.buscar(id);
+    }
 }

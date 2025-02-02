@@ -3,10 +3,13 @@ package br.com.delivery.v1.controller;
 import br.com.delivery.v1.model.Cozinha;
 import br.com.delivery.v1.service.CozinhaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.awt.*;
 import java.util.List;
 
 @RestController
@@ -16,9 +19,14 @@ public class CozinhaController {
 
     private final CozinhaService cozinhaService;
 
-    @GetMapping
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<Cozinha> listar() {
         return cozinhaService.listar();
+    }
+
+    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public Cozinha buscar(@PathVariable  Integer id) {
+        return cozinhaService.buscar(id);
     }
 
 }

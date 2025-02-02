@@ -17,4 +17,7 @@ public class CozinhaService {
         return cozinhaRepository.listar();
     }
 
+    public Cozinha buscar(Integer id) {
+        return cozinhaRepository.buscar(id);
+    }
 }

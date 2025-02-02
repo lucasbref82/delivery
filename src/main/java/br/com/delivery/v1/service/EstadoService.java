@@ -16,4 +16,8 @@ public class EstadoService {
     public List<Estado> listar() {
         return estadoRepository.listar();
     }
+
+    public Estado buscar(Integer id) {
+        return estadoRepository.buscar(id);
+    }
 }

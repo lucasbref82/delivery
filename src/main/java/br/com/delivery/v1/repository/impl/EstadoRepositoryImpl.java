@@ -22,7 +22,7 @@ public class EstadoRepositoryImpl implements EstadoRepository {
     }
 
     @Override
-    public Estado buscar(Long id) {
+    public Estado buscar(Integer id) {
         return manager.find(Estado.class, id);
     }
 

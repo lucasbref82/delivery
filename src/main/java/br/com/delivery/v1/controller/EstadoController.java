@@ -3,7 +3,9 @@ package br.com.delivery.v1.controller;
 import br.com.delivery.v1.model.Estado;
 import br.com.delivery.v1.service.EstadoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,8 +18,13 @@ public class EstadoController {
 
     private final EstadoService estadoService;
 
-    @GetMapping
+    @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public List<Estado> listar() {
         return estadoService.listar();
+    }
+
+    @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    public Estado buscar(@PathVariable Integer id) {
+        return estadoService.buscar(id);
     }
 }
