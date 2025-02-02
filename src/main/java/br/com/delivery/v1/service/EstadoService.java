@@ -25,4 +25,8 @@ public class EstadoService {
         }
         return estado;
     }
+
+    public Estado salvar(Estado estado) {
+        return estadoRepository.salvar(estado);
+    }
 }
