@@ -5,6 +5,7 @@ import br.com.delivery.v1.model.dto.MensagemRetorno;
 import br.com.delivery.v1.model.wrapper.EstadosWrapper;
 import br.com.delivery.v1.service.EstadoService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +59,17 @@ public class EstadoController {
                         .sucesso(true)
                         .mensagem("Estado salvo com sucesso.")
                         .resultado(estadoService.salvar(estado))
+                        .build()
+                );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MensagemRetorno> atualizar(@RequestBody Estado estado, @PathVariable Integer id) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(MensagemRetorno
+                        .builder()
+                        .resultado(estadoService.atualizar(estado, id))
                         .build()
                 );
     }
