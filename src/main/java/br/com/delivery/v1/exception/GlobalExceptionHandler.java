@@ -27,7 +27,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<MensagemRetorno> handleException(Exception e) {
-        log.info();
         log.error("Ocorreu um erro inesperado: {}", e.getMessage(), e);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
