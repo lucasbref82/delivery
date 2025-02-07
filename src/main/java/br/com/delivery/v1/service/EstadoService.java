@@ -36,4 +36,9 @@ public class EstadoService {
         BeanUtils.copyProperties(estado, estadoAtual, "id");
         return estadoRepository.salvar(estadoAtual);
     }
+
+    public void deletar(Integer id) {
+        Estado estadoAtual = estadoRepository.buscar(id);
+        estadoRepository.remover(estadoAtual);
+    }
 }
