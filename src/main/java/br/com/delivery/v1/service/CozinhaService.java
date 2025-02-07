@@ -1,11 +1,13 @@
 package br.com.delivery.v1.service;
 
+import br.com.delivery.v1.exception.EntidadeEmUsoException;
 import br.com.delivery.v1.exception.NaoEncontradoException;
 import br.com.delivery.v1.model.Cozinha;
 import br.com.delivery.v1.repository.impl.CozinhaRepositoryImpl;
 import br.com.delivery.v1.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +42,11 @@ public class CozinhaService {
 
     public void remover(Integer id) {
         Cozinha cozinhaAtual = buscar(id);
-        cozinhaRepository.remover(cozinhaAtual);
+        try {
+            cozinhaRepository.remover(cozinhaAtual);
+        } catch (DataIntegrityViolationException e) {
+            throw new EntidadeEmUsoException(Utils.format("Não é possível deletar cozinha de id {} pos ela está em uso."));
+        }
+
     }
 }
