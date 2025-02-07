@@ -3,14 +3,13 @@ package br.com.delivery.v1.controller;
 import br.com.delivery.v1.model.Restaurante;
 import br.com.delivery.v1.model.dto.MensagemRetorno;
 import br.com.delivery.v1.service.RestauranteService;
+import br.com.delivery.v1.utils.Utils;
+import com.sun.mail.iap.Response;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,6 +39,42 @@ public class RestauranteController {
                         .builder()
                         .sucesso(true)
                         .resultado(restauranteService.buscar(id)).build()
+                );
+    }
+
+    @PostMapping
+    public ResponseEntity<MensagemRetorno> criar(@RequestBody Restaurante restaurante) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(MensagemRetorno
+                        .builder()
+                        .sucesso(true)
+                        .resultado(restauranteService.criar(restaurante))
+                        .build()
+                );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MensagemRetorno> atualizar(@PathVariable Integer id, @RequestBody Restaurante restaurante) {
+        return ResponseEntity
+                .ok(MensagemRetorno
+                        .builder()
+                        .sucesso(true)
+                        .resultado(restauranteService.atualizar(id, restaurante))
+                        .build()
+                );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<MensagemRetorno> deletar(@PathVariable Integer id) {
+        restauranteService.remover(id);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body(MensagemRetorno
+                        .builder()
+                        .sucesso(true)
+                        .resultado(Utils.format("Restaurante de id {} deletado com sucesso", id))
+                        .build()
                 );
     }
 }
