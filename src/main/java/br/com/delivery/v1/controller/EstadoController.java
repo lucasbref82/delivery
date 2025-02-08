@@ -6,10 +6,13 @@ import br.com.delivery.v1.model.wrapper.EstadosWrapper;
 import br.com.delivery.v1.service.EstadoService;
 import br.com.delivery.v1.utils.Utils;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/v1/estados")
@@ -84,6 +87,18 @@ public class EstadoController {
                         .builder()
                         .sucesso(true)
                         .mensagem(Utils.format("Estado de id {} deletado com sucesso", id))
+                        .build()
+                );
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<MensagemRetorno> atualizarParcialmente(@PathVariable Integer id, Map<String, Object> campos) {
+        return ResponseEntity
+                .ok(MensagemRetorno
+                        .builder()
+                        .sucesso(true)
+                        .mensagem(Utils.format("Estados de id {} atualizado parcialemten."))
+                        .resultado(estadoService.atualizarParcialmente(id, campos))
                         .build()
                 );
     }

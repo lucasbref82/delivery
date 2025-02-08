@@ -59,20 +59,7 @@ public class RestauranteService {
 
     public Restaurante atualizarParcialmente(Integer id, Map<String, Object> campos) {
         Restaurante restauranteAtual = buscar(id);
-        merge(campos, restauranteAtual);
+        Utils.merge(campos, restauranteAtual, Restaurante.class);
         return atualizar(id, restauranteAtual);
-    }
-
-    private void merge(Map<String, Object> campos, Restaurante restauranteAtual) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Restaurante restauranteOrigem = objectMapper.convertValue(campos, Restaurante.class);
-        campos.forEach((nomePropriedade, valorPropriedade) -> {
-            Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
-            if (field != null) {
-                Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
-                field.setAccessible(true);
-                ReflectionUtils.setField(field, restauranteAtual, novoValor);
-            }
-        });
     }
 }
