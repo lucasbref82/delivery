@@ -5,11 +5,15 @@ import br.com.delivery.v1.model.Cozinha;
 import br.com.delivery.v1.model.Restaurante;
 import br.com.delivery.v1.repository.impl.RestauranteRepositoryImpl;
 import br.com.delivery.v1.utils.Utils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -51,5 +55,24 @@ public class RestauranteService {
     public void remover(Integer id) {
         Restaurante restauranteAtual = buscar(id);
         restauranteRepository.remover(restauranteAtual);
+    }
+
+    public Restaurante atualizarParcialmente(Integer id, Map<String, Object> campos) {
+        Restaurante restauranteAtual = buscar(id);
+        merge(campos, restauranteAtual);
+        return atualizar(id, restauranteAtual);
+    }
+
+    private void merge(Map<String, Object> campos, Restaurante restauranteAtual) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Restaurante restauranteOrigem = objectMapper.convertValue(campos, Restaurante.class);
+        campos.forEach((nomePropriedade, valorPropriedade) -> {
+            Field field = ReflectionUtils.findField(Restaurante.class, nomePropriedade);
+            if (field != null) {
+                Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
+                field.setAccessible(true);
+                ReflectionUtils.setField(field, restauranteAtual, novoValor);
+            }
+        });
     }
 }
