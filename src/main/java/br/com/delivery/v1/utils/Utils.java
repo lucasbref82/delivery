@@ -12,9 +12,16 @@ public class Utils {
     private Utils() {
     }
 
+    /**
+     * @param format string a ser formatada, o placeholder deve vir como {}
+     * @param arguments objetos que substituiram os placeholders
+     * @return mensagem formata
+     */
     public static String format(String format, Object... arguments) {
         return MessageFormatter.basicArrayFormat(format, arguments);
     }
+
+
     /**
      * Atualiza os atributos de um objeto (objetoDestino) com base nos valores informados em um mapa.
      *
