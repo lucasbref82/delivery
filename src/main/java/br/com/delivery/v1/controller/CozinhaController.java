@@ -71,7 +71,7 @@ public class CozinhaController {
                 .body(MensagemRetorno
                         .builder()
                         .sucesso(true)
-                        .mensagem(Utils.format("Cozinha de id {} deletada com sucesso."))
+                        .mensagem(Utils.format("Cozinha de id {} deletada com sucesso"))
                         .build()
                 );
     }
