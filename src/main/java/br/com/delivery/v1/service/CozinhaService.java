@@ -3,7 +3,7 @@ package br.com.delivery.v1.service;
 import br.com.delivery.v1.exception.EntidadeEmUsoException;
 import br.com.delivery.v1.exception.NaoEncontradoException;
 import br.com.delivery.v1.model.Cozinha;
-import br.com.delivery.v1.repository.impl.CozinhaRepositoryImpl;
+import br.com.delivery.v1.repository.CozinhaRepository;
 import br.com.delivery.v1.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -16,34 +16,30 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CozinhaService {
 
-    private final CozinhaRepositoryImpl cozinhaRepository;
+    private final CozinhaRepository cozinhaRepository;
 
     public List<Cozinha> listar() {
-        return cozinhaRepository.listar();
+        return cozinhaRepository.findAll();
     }
 
     public Cozinha buscar(Integer id) {
-        Cozinha cozinha = cozinhaRepository.buscar(id);
-        if (cozinha == null) {
-            throw new NaoEncontradoException(Utils.format("Cozinha de id {} não encontrada.", id));
-        }
-        return cozinhaRepository.buscar(id);
+        return cozinhaRepository.findById(id).orElseThrow(() -> new NaoEncontradoException(Utils.format("Cozinha de id {} não encontrada.", id)));
     }
 
     public Cozinha criar(Cozinha cozinha) {
-        return cozinhaRepository.salvar(cozinha);
+        return cozinhaRepository.save(cozinha);
     }
 
     public Cozinha atualizar(Integer id, Cozinha cozinha) {
         Cozinha cozinhaAtual = buscar(id);
         BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-        return cozinhaRepository.salvar(cozinhaAtual);
+        return cozinhaRepository.save(cozinhaAtual);
     }
 
     public void remover(Integer id) {
         Cozinha cozinhaAtual = buscar(id);
         try {
-            cozinhaRepository.remover(cozinhaAtual);
+            cozinhaRepository.delete(cozinhaAtual);
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(Utils.format("Não é possível deletar cozinha de id {} pos ela está em uso."));
         }

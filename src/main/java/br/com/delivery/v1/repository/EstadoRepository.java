@@ -1,14 +1,11 @@
 package br.com.delivery.v1.repository;
 
 import br.com.delivery.v1.model.Estado;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface EstadoRepository {
-
-    List<Estado> listar();
-    Estado buscar(Integer id);
-    Estado salvar(Estado estado);
-    void remover(Estado estado);
-
+@Repository
+public interface EstadoRepository extends JpaRepository<Estado, Integer> {
 }
