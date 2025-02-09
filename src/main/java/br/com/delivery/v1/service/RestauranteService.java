@@ -4,15 +4,11 @@ import br.com.delivery.v1.exception.NaoEncontradoException;
 import br.com.delivery.v1.model.Cozinha;
 import br.com.delivery.v1.model.Restaurante;
 import br.com.delivery.v1.repository.RestauranteRepository;
-import br.com.delivery.v1.repository.impl.RestauranteRepositoryImpl;
 import br.com.delivery.v1.utils.Utils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 

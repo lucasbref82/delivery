@@ -3,7 +3,6 @@ package br.com.delivery.v1.service;
 import br.com.delivery.v1.exception.NaoEncontradoException;
 import br.com.delivery.v1.model.Estado;
 import br.com.delivery.v1.repository.EstadoRepository;
-import br.com.delivery.v1.repository.impl.EstadoRepositoryImpl;
 import br.com.delivery.v1.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
