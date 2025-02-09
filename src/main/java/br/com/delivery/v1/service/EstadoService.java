@@ -22,6 +22,7 @@ public class EstadoService {
         return estadoRepository.findAll();
     }
 
+
     public Estado buscar(Integer id) {
         return estadoRepository
                 .findById(id)

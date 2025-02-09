@@ -3,6 +3,7 @@ package br.com.delivery.v1.service;
 import br.com.delivery.v1.exception.NaoEncontradoException;
 import br.com.delivery.v1.model.Cozinha;
 import br.com.delivery.v1.model.Restaurante;
+import br.com.delivery.v1.repository.RestauranteRepository;
 import br.com.delivery.v1.repository.impl.RestauranteRepositoryImpl;
 import br.com.delivery.v1.utils.Utils;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,19 +20,17 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class RestauranteService {
 
-    private final RestauranteRepositoryImpl restauranteRepository;
+    private final RestauranteRepository restauranteRepository;
     private final CozinhaService cozinhaService;
 
     public List<Restaurante> listar() {
-        return restauranteRepository.listar();
+        return restauranteRepository.findAll();
     }
 
     public Restaurante buscar(Integer id) {
-        Restaurante restaurante = restauranteRepository.buscar(id);
-        if (restaurante == null) {
-            throw new NaoEncontradoException(Utils.format("Restaurante de id {} não encontrado.", id));
-        }
-        return restauranteRepository.buscar(id);
+        return restauranteRepository
+                .findById(id)
+                .orElseThrow(() -> new NaoEncontradoException(Utils.format("Restaurante de id {} não encontrado")));
     }
 
     public Restaurante criar(Restaurante restaurante) {
@@ -39,7 +38,7 @@ public class RestauranteService {
             Cozinha cozinha = cozinhaService.buscar(restaurante.getCozinha().getId());
             restaurante.setCozinha(cozinha);
         }
-        return restauranteRepository.salvar(restaurante);
+        return restauranteRepository.save(restaurante);
     }
 
     public Restaurante atualizar(Integer id, Restaurante restaurante) {
@@ -49,12 +48,12 @@ public class RestauranteService {
             restaurante.setCozinha(cozinha);
         }
         BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
-        return restauranteRepository.salvar(restauranteAtual);
+        return restauranteRepository.save(restauranteAtual);
     }
 
     public void remover(Integer id) {
         Restaurante restauranteAtual = buscar(id);
-        restauranteRepository.remover(restauranteAtual);
+        restauranteRepository.delete(restauranteAtual);
     }
 
     public Restaurante atualizarParcialmente(Integer id, Map<String, Object> campos) {

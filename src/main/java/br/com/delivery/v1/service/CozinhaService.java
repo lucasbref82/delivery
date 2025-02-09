@@ -23,7 +23,9 @@ public class CozinhaService {
     }
 
     public Cozinha buscar(Integer id) {
-        return cozinhaRepository.findById(id).orElseThrow(() -> new NaoEncontradoException(Utils.format("Cozinha de id {} não encontrada.", id)));
+        return cozinhaRepository
+                .findById(id)
+                .orElseThrow(() -> new NaoEncontradoException(Utils.format("Cozinha de id {} não encontrada.", id)));
     }
 
     public Cozinha criar(Cozinha cozinha) {
